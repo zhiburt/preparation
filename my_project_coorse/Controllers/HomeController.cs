@@ -1,19 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace my_project_coorse.Controllers
+namespace preparation.Controllers
 {
     public class HomeController : Controller
     {
         // GET: Home
-        public IActionResult Index()
-        {
-            return View();
-        }
+        public IActionResult Index() => View();
 
         // GET: Home/Details/5
         public IActionResult Details(int id)
