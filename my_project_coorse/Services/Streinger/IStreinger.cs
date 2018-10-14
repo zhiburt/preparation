@@ -13,7 +13,7 @@ namespace preparation.Services.Streinger
         /// <param name="suppName">Supplier Name</param>
         /// <param name="suppAddress">Supplier Address</param>
         /// <returns>returns Preparations</returns>
-        Task<IEnumerable<Preparation>> Suppliers(string suppName, string suppAddress);
+        Task<Supplier> Suppliers(string suppName, string suppAddress);
 
         Task<Preparation> Preparations(string prepName);
         Task<IEnumerable<Preparation>> Preparations();
