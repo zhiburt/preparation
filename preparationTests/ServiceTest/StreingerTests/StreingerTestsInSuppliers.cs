@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net.Http;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
+using Moq;
 using preparation.Models;
+using preparation.Services.ExternalDB;
 using preparation.Services.Streinger;
 using Xunit;
 using Xunit.Sdk;
@@ -20,7 +23,11 @@ namespace preparationTests.ServiceTest.StreingerTests
             public async Task GetSuppliersByAddressAndName()
             {
                 //Arrange
-                var streinger = new Streinger();
+                var mok = new Mock<IExternalDb>();
+                mok.Setup(e => e.AskService(It.IsAny<string>(), HttpMethod.Get, null))
+                    .Returns(Task.FromResult(@""));
+                var streinger = new Streinger(mok.Object);
+
                 var name = "First Company";
                 var address = "Belarus Minsk 12 Surganova 37/2 ";
                 //Actual
@@ -34,7 +41,11 @@ namespace preparationTests.ServiceTest.StreingerTests
             public async Task GetSuppliersByAddressAndNameNotExists()
             {
                 //Arrange
-                var streinger = new Streinger();
+                var mok = new Mock<IExternalDb>();
+                mok.Setup(e => e.AskService(It.IsAny<string>(), HttpMethod.Get, null))
+                    .Returns(Task.FromResult(@""));
+                var streinger = new Streinger(mok.Object);
+
                 var name = "INVALID_NAME_100_PERCENTS";
                 var address = "INVALID_ADDRESS_100_PERCENTS";
                 //Actual
@@ -47,7 +58,11 @@ namespace preparationTests.ServiceTest.StreingerTests
             public async Task GetSuppliersByAddressAndNameWithEmptyParam()
             {
                 //Arrange
-                var streinger = new Streinger();
+                var mok = new Mock<IExternalDb>();
+                mok.Setup(e => e.AskService(It.IsAny<string>(), HttpMethod.Get, null))
+                    .Returns(Task.FromResult(@""));
+                var streinger = new Streinger(mok.Object);
+
                 var name = "";
                 var address = "";
                 //Actual
@@ -60,7 +75,11 @@ namespace preparationTests.ServiceTest.StreingerTests
             public async Task GetSuppliersByIdWhenIdIsValid()
             {
                 //Arrange
-                var streinger = new Streinger();
+                var mok = new Mock<IExternalDb>();
+                mok.Setup(e => e.AskService(It.IsAny<string>(), HttpMethod.Get, null))
+                    .Returns(Task.FromResult(@""));
+                var streinger = new Streinger(mok.Object);
+
                 var name = "First Company";
                 //Actual
                 var supp = await streinger.Suppliers(1);
@@ -73,7 +92,12 @@ namespace preparationTests.ServiceTest.StreingerTests
             public async Task GetSuppliersByIdWhenIdInValid()
             {
                 //Arrange
-                var streinger = new Streinger();
+                var mok = new Mock<IExternalDb>();
+                mok.Setup(e => e.AskService(It.IsAny<string>(), HttpMethod.Get, null))
+                    .Returns(Task.FromResult(@"hello_world"));
+
+                var streinger = new Streinger(mok.Object);
+
                 var id = -10;
                 //Actual
                 var supp = await streinger.Suppliers(id);
@@ -87,7 +111,10 @@ namespace preparationTests.ServiceTest.StreingerTests
             [Fact]
             public async Task AddValidSupplierTest()
             {
-                var streinger = new Streinger();
+                var mok = new Mock<IExternalDb>();
+                mok.Setup(e => e.AskService(It.IsAny<string>(), HttpMethod.Get, null))
+                    .Returns(Task.FromResult(@""));
+                var streinger = new Streinger(mok.Object);
                 var supp = new Supplier("Therd Company", "Therd Company", "Belarus Minsk 12 Surganova 37/2 ",
                     "1232103asd7asdasd11128asd", "This is my second company");
                 //Actual
@@ -102,7 +129,11 @@ namespace preparationTests.ServiceTest.StreingerTests
             [Fact]
             public async Task RemoveSupplierThatExistsInTest()
             {
-                var streinger = new Streinger();
+                var mok = new Mock<IExternalDb>();
+                mok.Setup(e => e.AskService(It.IsAny<string>(), HttpMethod.Get, null))
+                    .Returns(Task.FromResult(@""));
+                var streinger = new Streinger(mok.Object);
+
                 var supp = new Supplier("Therd Company", "Therd Company", "Belarus Minsk 12 Surganova 37/2 ",
                     "1232103asd7asdasd11128asd", "This is my second company");
                 //Actual
@@ -114,7 +145,11 @@ namespace preparationTests.ServiceTest.StreingerTests
             [Fact]
             public async Task RemoveSupplierThatNotExistsInTest()
             {
-                var streinger = new Streinger();
+                var mok = new Mock<IExternalDb>();
+                mok.Setup(e => e.AskService(It.IsAny<string>(), HttpMethod.Get, null))
+                    .Returns(Task.FromResult(@""));
+                var streinger = new Streinger(mok.Object);
+
                 var supp = new Supplier("INVALID_COMPANY_100_PERCENTS", "", "INVALID_ADDRESS_100_PERCENTS",
                     "", "");
                 //Actual
@@ -126,7 +161,11 @@ namespace preparationTests.ServiceTest.StreingerTests
             [Fact]
             public async Task RemoveSupplierWhenInvalidParametrsTest()
             {
-                var streinger = new Streinger();
+                var mok = new Mock<IExternalDb>();
+                mok.Setup(e => e.AskService(It.IsAny<string>(), HttpMethod.Get, null))
+                    .Returns(Task.FromResult(@""));
+                var streinger = new Streinger(mok.Object);
+
                 var supp = new Supplier("", "", "",
                     "", "");
                 //Actual

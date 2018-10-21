@@ -1,0 +1,56 @@
+﻿
+@{
+    Layout = "_Layout";
+}
+
+
+
+@model preparation.ViewModels.Account.UserLoginViewModel
+@section navbar
+    {
+
+}
+
+
+@section css{
+    <style>
+        .form-signin {
+            padding-right: 10rem;
+            padding-left: 10rem;
+        }
+    </style>
+}
+
+<div class="py-5 text-center">
+    <img width="300" height="200" class="d-block mx-auto" alt="" src="~/images/logo/logo_v2.svg">
+    <h2 class="display-4">We can make world great again.</h2>
+    <p class="lead">Look fellow. Each required form group has a validation state that can be triggered by attempting to submit the form without completing it.</p>
+</div>
+
+<form class="form-signin text-center" asp-action="Login">
+    <div asp-validation-summary="ModelOnly"></div>
+    <label class="sr-only" asp-for="Email"></label>
+    <input class="form-control" asp-for="Email" placeholder="Email address">
+    <label class="sr-only" asp-for="Password"></label>
+    <input class="form-control" asp-for="Password" placeholder="Password">
+    <div class="mb-3 pt-3 form-check form-group custom-control">
+        <input class="custom-control-input" type="checkbox" asp-for="RememberMe">
+        <label class="custom-control-label" asp-for="RememberMe">
+        </label>
+    </div>
+    <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+</form>
+
+<footer class="my-5 pt-5 text-muted text-center text-small">
+    <p class="mb-1">© 2017-2018 Health.com</p>
+    <ul class="list-inline">
+        <li class="list-inline-item"><a href="#">Privacy</a></li>
+        <li class="list-inline-item"><a href="#">Terms</a></li>
+        <li class="list-inline-item"><a href="#">Support</a></li>
+    </ul>
+</footer>
+
+@section footer
+    {
+
+}

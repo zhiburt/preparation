@@ -13,6 +13,7 @@ using System.Web;
 using Microsoft.EntityFrameworkCore.Internal;
 using Newtonsoft.Json;
 using preparation.Models;
+using preparation.Services.ExternalDB;
 
 namespace preparation.Services.Streinger
 {
@@ -20,9 +21,16 @@ namespace preparation.Services.Streinger
     //TODO streinger need constructor DB +- for MOK better testing
     public class Streinger : IStreinger
     {
+        private readonly IExternalDb _externalDb;
+
+        public Streinger(IExternalDb externalDb)
+        {
+            _externalDb = externalDb;
+        }
+
         public async Task<Supplier> Suppliers(string suppName, string suppAddress)
         {
-            var strJson = await AskService($"suppliers/find/byAddressAndName", null, new []
+            var strJson = await _externalDb.AskService($"suppliers/find/byAddressAndName", null, new[]
             {
                 ("address", suppAddress),
                 ("name", suppName)
@@ -31,10 +39,19 @@ namespace preparation.Services.Streinger
             return Deserialize<Supplier>(strJson);
         }
 
+        //TODO TESTS NOT FOUND
+        public async Task<IQueryable<Supplier>> Suppliers()
+        {
+            var strJson = await _externalDb.AskService($"suppliers");
+
+            var supplier = Deserialize<IEnumerable<Supplier>>(strJson);
+
+            return supplier.AsQueryable();
+        }
 
         public async Task<Supplier> Suppliers(int supplierId)
         {
-            var strJson = await AskService($"suppliers/find/byId", HttpMethod.Get, new []
+            var strJson = await _externalDb.AskService($"suppliers/find/byId", HttpMethod.Get, new[]
             {
                 ("id", supplierId.ToString())
             });
@@ -46,8 +63,8 @@ namespace preparation.Services.Streinger
         public async Task<bool> AddSupplier(Supplier s)
         {
             var strJson =
-                await AskService(
-                    $"suppliers/new", HttpMethod.Put, new []
+                await _externalDb.AskService(
+                    $"suppliers/new", HttpMethod.Put, new[]
                     {
                         ("name", s.Name),
                         ("company", s.Company),
@@ -62,7 +79,7 @@ namespace preparation.Services.Streinger
         public async Task<bool> RemoveSupplier(Supplier s)
         {
             var strJson =
-                await AskService(
+                await _externalDb.AskService(
                     $"suppliers/delete", HttpMethod.Delete, new[]
                     {
                         ("name", s.Name),
@@ -77,7 +94,7 @@ namespace preparation.Services.Streinger
 
         public async Task<Preparation> Preparations(string prepName)
         {
-            var strJson = await AskService($"preparations/find/byName", HttpMethod.Get, new[]
+            var strJson = await _externalDb.AskService($"preparations/find/byName", HttpMethod.Get, new[]
             {
                 ("name", prepName)
             });
@@ -88,9 +105,12 @@ namespace preparation.Services.Streinger
         }
 
 
-        private async Task<Preparation> Preparations(int prepId)
+        public async Task<Preparation> Preparations(int prepId)
         {
-            var strJson = await AskService($"preparations/find/byId?id={prepId}");
+            var strJson = await _externalDb.AskService($"preparations/find/byId", HttpMethod.Get, new[]
+            {
+                ("id", prepId.ToString())
+            });
             var preparation = Deserialize<Preparation>(strJson);
 
             return preparation;
@@ -103,7 +123,7 @@ namespace preparation.Services.Streinger
         /// <returns></returns>
         public async Task<IEnumerable<Preparation>> Preparations()
         {
-            var strJson = await AskService("preparations");
+            var strJson = await _externalDb.AskService("preparations");
             var preparations = Deserialize<IEnumerable<Preparation>>(strJson);
 
             return preparations;
@@ -117,7 +137,7 @@ namespace preparation.Services.Streinger
                 return null;
             }
 
-            var strJson = await AskService($"goods/preparations", HttpMethod.Get, new []
+            var strJson = await _externalDb.AskService($"goods/preparations", HttpMethod.Get, new[]
             {
                 ("preparation_id", prep.Id.ToString())
             });
@@ -126,10 +146,18 @@ namespace preparation.Services.Streinger
             return goods;
         }
 
+        public async Task<IEnumerable<Good>> Goods()
+        {
+            var strJson = await _externalDb.AskService($"goods", HttpMethod.Get, null);
+            var goods = await GetGoods(strJson);
+
+            return goods;
+        }
+
 
         public async Task<bool> AddGood(Good good)
         {
-            if (good == null || (good.Supplier == null || good.Product == null )) throw new ArgumentNullException(nameof(good));
+            if (good == null || (good.Supplier == null || good.Product == null)) throw new ArgumentNullException(nameof(good));
 
             var prep = await Preparations(good.Product.Name);
             var supp = await Suppliers(good.Supplier.Name, good.Supplier.Address);
@@ -138,7 +166,7 @@ namespace preparation.Services.Streinger
                 return false;
             }
 
-            var strJson = await AskService($"goods/new", HttpMethod.Put, new[]
+            var strJson = await _externalDb.AskService($"goods/new", HttpMethod.Put, new[]
             {
                 ("preparation_id", prep.Id.ToString()),
                 ("supplier_id", supp.Id.ToString()),
@@ -159,7 +187,7 @@ namespace preparation.Services.Streinger
                 return false;
             }
 
-            var strJson = await AskService($"goods/delete", HttpMethod.Delete, new[]
+            var strJson = await _externalDb.AskService($"goods/delete", HttpMethod.Delete, new[]
             {
                 ("preparation_id", prep.Id.ToString()),
                 ("supplier_id", supp.Id.ToString()),
@@ -167,52 +195,6 @@ namespace preparation.Services.Streinger
             });
 
             return !CheckErrorInJSON(strJson);
-        }
-
-        /// <summary>
-        /// Asking foreign Service about p 
-        /// </summary>
-        /// <param name="p">this is request service</param>
-        /// <param name="method">Method HTTP for request</param>
-        /// <param name="param">Params Request</param>
-        /// <returns>resp once JSON in string</returns>
-        private async Task<string> AskService(string p, HttpMethod m = null, params (string key, string value)[] param)
-        {
-
-            const string baseUrl = "http://127.0.0.1:44321/";
-            string url = p + "?";
-            if (m == HttpMethod.Get || m== HttpMethod.Delete || m == null)
-            {
-                var query = HttpUtility.ParseQueryString(string.Empty);
-                foreach ((string key, string value) valueTuple in param)
-                {
-                    query.Add(valueTuple.key, valueTuple.value);
-                }
-
-                url += query.ToString();
-            }
-
-            HttpResponseMessage r = null;
-            HttpMethod method = m ?? HttpMethod.Get;
-            using (var client = new HttpClient {Timeout = TimeSpan.FromSeconds(20), BaseAddress = new Uri(baseUrl) })
-            using (HttpRequestMessage req = new HttpRequestMessage(method, url))
-            {
-                if (method == HttpMethod.Put || method == HttpMethod.Post)
-                {
-                    var bodyParams = param?.Select((v) => new KeyValuePair<string, string>(v.key, v.value));
-                    req.Content = new FormUrlEncodedContent(bodyParams);
-                }
-                client.DefaultRequestHeaders.Accept.Clear();
-                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-
-                r = await client.SendAsync(req);
-
-            }
-
-            var resp = await r.Content.ReadAsStringAsync();
-            Debug.WriteLine(resp);
-            return resp;
-
         }
 
         private T Deserialize<T>(string json)
@@ -237,6 +219,11 @@ namespace preparation.Services.Streinger
 
         private bool CheckErrorInJSON(string json)
         {
+            if (string.IsNullOrEmpty(json))
+            {
+                return true;
+            }
+
             const string errorKey = "error";
             var map = JsonConvert.DeserializeObject<Dictionary<string, object>>(json,
                 settings: new JsonSerializerSettings()
@@ -259,7 +246,7 @@ namespace preparation.Services.Streinger
             {
                 Supplier supplier = await Suppliers(goodsServiceResp.SupplierId);
                 Preparation prep = await Preparations(goodsServiceResp.PreparationId);
-                goods.Add( new Good { Price = goodsServiceResp.Price, Product = prep, Supplier = supplier } );
+                goods.Add(new Good { Price = goodsServiceResp.Price, Product = prep, Supplier = supplier });
             }
 
             return goods;
@@ -309,6 +296,4 @@ using (HttpRequestMessage req = new HttpRequestMessage(HttpMethod.Get,
 */
 
     }
-
-
 }

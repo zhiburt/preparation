@@ -1,0 +1,46 @@
+﻿@model IEnumerable<preparation.Models.Preparation>
+
+@{
+    ViewBag.Title = "title";
+    Layout = "_Layout";
+}
+
+<h2>title</h2>
+
+@if (Model == null)
+{
+    <h1>Model is NULL</h1>
+}
+else
+{
+    <table class="table table-sm">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Name</th>
+                <th scope="col">Type</th>
+                <th scope="col">Active Ingredient</th>
+                <th scope="col">ID</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{int i = 0;}
+            @foreach (var preparation in Model)
+            {
+            <tr class="tooltip-ref" data-toggle="tooltip" data-placement="top" title="@(
+                        preparation.Description == "" ? "Description is empty" : preparation.Description)">
+                <th scope="row">@(i++)</th>
+                <td>@preparation.Name</td>
+                <td>@preparation.Type</td>
+                <td>@preparation.ActiveIngredient</td>
+                <td>@preparation.Id</td>
+            </tr>
+
+            }
+        </tbody>
+    </table>
+}
+
+@section js{
+    <script src="js/table.js"></script>
+}

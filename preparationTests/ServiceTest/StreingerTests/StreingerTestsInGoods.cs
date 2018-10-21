@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net.Http;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
+using Moq;
 using preparation.Models;
+using preparation.Services.ExternalDB;
 using preparation.Services.Streinger;
 using Xunit;
 using Xunit.Sdk;
@@ -23,9 +26,26 @@ namespace preparationTests.ServiceTest.StreingerTests
             public async Task GetGoodsWhenNameIsValid()
             {
                 //Arrange
-                var streinger = new Streinger();
+                var mok = new Mock<IExternalDb>();
+                mok.Setup(e => e.AskService(It.IsAny<string>(), HttpMethod.Get, null))
+                    .Returns(Task.FromResult(@"{ ""Name"": ""123""  }"));
+                var streinger = new Streinger(mok.Object);
                 //Actual
                 IEnumerable<Good> goods = await streinger.Goods("Бетасерк");
+                //Assert
+                Assert.NotNull(goods);
+            }
+
+            [Fact]
+            public async Task GetGoods()
+            {
+                //Arrange
+                var mok = new Mock<IExternalDb>();
+                mok.Setup(e => e.AskService(It.IsAny<string>(), HttpMethod.Get, null))
+                    .Returns(Task.FromResult(@""));
+                var streinger = new Streinger(mok.Object);
+                //Actual
+                IEnumerable<Good> goods = await streinger.Goods();
                 //Assert
                 Assert.NotNull(goods);
             }
@@ -34,7 +54,10 @@ namespace preparationTests.ServiceTest.StreingerTests
             public async Task GetGoodsWhenNameInValid()
             {
                 //Arrange
-                var streinger = new Streinger();
+                var mok = new Mock<IExternalDb>();
+                mok.Setup(e => e.AskService(It.IsAny<string>(), HttpMethod.Get, null))
+                    .Returns(Task.FromResult(@""));
+                var streinger = new Streinger(mok.Object);
                 //Actual
                 IEnumerable<Good> goods = await streinger.Goods("INVALID_NAME_100_PERCENTS");
                 //Assert
@@ -45,7 +68,10 @@ namespace preparationTests.ServiceTest.StreingerTests
             public async Task GetGoodsWhenNameEmpty()
             {
                 //Arrange
-                var streinger = new Streinger();
+                var mok = new Mock<IExternalDb>();
+                mok.Setup(e => e.AskService(It.IsAny<string>(), HttpMethod.Get, null))
+                    .Returns(Task.FromResult(@""));
+                var streinger = new Streinger(mok.Object);
                 //Actual
                 IEnumerable<Good> goods = await streinger.Goods("");
                 //Assert
@@ -57,7 +83,11 @@ namespace preparationTests.ServiceTest.StreingerTests
             [Fact]
             public async Task AddGoodWhenValidParam()
             {
-                var streinger = new Streinger();
+                var mok = new Mock<IExternalDb>();
+                mok.Setup(e => e.AskService(It.IsAny<string>(), HttpMethod.Get, null))
+                    .Returns(Task.FromResult(@"""status"": ""ok"""));
+                var streinger = new Streinger(mok.Object);
+                
                 decimal price = 13.123m;
                 var supp = new Supplier("First Company", "First Company", "Belarus Minsk 12 Surganova 37/2 ",
                     "", "");
@@ -75,7 +105,10 @@ namespace preparationTests.ServiceTest.StreingerTests
             [Fact]
             public async Task AddGoodWithInValidParam()
             {
-                var streinger = new Streinger();
+                var mok = new Mock<IExternalDb>();
+                mok.Setup(e => e.AskService(It.IsAny<string>(), HttpMethod.Get, null))
+                    .Returns(Task.FromResult(@""));
+                var streinger = new Streinger(mok.Object);
                 var prep = new Preparation("INVALID", "", "", "", "Буг", "");
                 var good = new Good { Price = 0, Supplier = new Supplier(), Product = prep };
                 //Actual
@@ -88,7 +121,10 @@ namespace preparationTests.ServiceTest.StreingerTests
             public async Task AddGoodWhenParamEmpty()
             {
                 //Arrange
-                var streinger = new Streinger();
+                var mok = new Mock<IExternalDb>();
+                mok.Setup(e => e.AskService(It.IsAny<string>(), HttpMethod.Get, null))
+                    .Returns(Task.FromResult(@""));
+                var streinger = new Streinger(mok.Object);
                 //Actual
                 //Assert
                 await Assert.ThrowsAsync<ArgumentNullException>(async () => await streinger.AddGood(null));
@@ -101,7 +137,10 @@ namespace preparationTests.ServiceTest.StreingerTests
             [Fact]
             public async Task RemoveGoodWhenValidParam()
             {
-                var streinger = new Streinger();
+                var mok = new Mock<IExternalDb>();
+                mok.Setup(e => e.AskService(It.IsAny<string>(), HttpMethod.Get, null))
+                    .Returns(Task.FromResult(@""));
+                var streinger = new Streinger(mok.Object);
                 var supp = new Supplier("First Company", "First Company", "Belarus Minsk 12 Surganova 37/2 ",
                     "", "");
                 var prep = new Preparation { Name = "Бетасерк" };
@@ -118,7 +157,11 @@ namespace preparationTests.ServiceTest.StreingerTests
             [Fact]
             public async Task RemoveGoodWithInValidParam()
             {
-                var streinger = new Streinger();
+                var mok = new Mock<IExternalDb>();
+                mok.Setup(e => e.AskService(It.IsAny<string>(), HttpMethod.Get, null))
+                    .Returns(Task.FromResult(@""));
+                var streinger = new Streinger(mok.Object);
+
                 var prep = new Preparation("INVALID", "", "", "", "Буг", "");
                 var good = new Good { Price = 0, Supplier = null, Product = prep };
                 //Actual
@@ -131,7 +174,10 @@ namespace preparationTests.ServiceTest.StreingerTests
             public async Task RemoveGoodWhenParamEmpty()
             {
                 //Arrange
-                var streinger = new Streinger();
+                var mok = new Mock<IExternalDb>();
+                mok.Setup(e => e.AskService(It.IsAny<string>(), HttpMethod.Get, null))
+                    .Returns(Task.FromResult(@""));
+                var streinger = new Streinger(mok.Object);
                 //Actual
                 //Assert
                 await Assert.ThrowsAsync<ArgumentNullException>(async () => await streinger.RemoveGood(null));

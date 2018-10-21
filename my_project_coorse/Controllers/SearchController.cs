@@ -16,14 +16,16 @@ namespace preparation.Controllers
 
         public async Task<IActionResult> Index()
         {
-            return View(await _streinger.Preparations());
+            return View(); // return best goods better
         }
 
+        //TODO better give IEnumerable<Stack<Good>>() for better View
+         
         [HttpGet]
         public async Task<IActionResult> Search(string searchName)
         {
-            var prep = await _streinger.Preparations(searchName);
-            return View("Index", prep);
+            var goods = await _streinger.Goods(searchName);
+            return View("Index", goods);
         }
     }
 }

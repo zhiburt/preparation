@@ -1,0 +1,31 @@
+﻿body {
+
+}
+
+.main {
+    padding-top: 15px;
+}
+
+.footer {
+    position: relative;
+    width: 100%;
+    color: black;
+    background-color: whitesmoke;
+}
+
+.main-footer {
+    padding-top: 40px;
+    padding-bottom: 1px;
+}
+
+.bell {
+    padding-right: 20px;
+}
+
+.small-footer {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+}
+
+.small-content {
+}

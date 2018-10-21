@@ -1,0 +1,9 @@
+﻿.sidebar {
+    position: fixed;
+    top: 0px;
+    bottom: 0px;
+    left: 0px;
+    z-index: 100;
+    padding: 48px 0 0;
+    box-shadow: inset -1px 0px 0px rgba(0,0,0,0.1);
+}

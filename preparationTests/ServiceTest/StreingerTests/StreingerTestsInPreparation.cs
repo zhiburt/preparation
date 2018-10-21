@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net.Http;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
+using Moq;
 using preparation.Models;
+using preparation.Services.ExternalDB;
 using preparation.Services.Streinger;
 using Xunit;
 using Xunit.Sdk;
@@ -18,7 +21,11 @@ namespace preparationTests.ServiceTest.StreingerTests
             public async Task GetAllPreparationsTestIsNotNull()
             {
                 //Arrange
-                var streinger = new Streinger();
+                var mok = new Mock<IExternalDb>();
+                mok.Setup(e => e.AskService(It.IsAny<string>(), HttpMethod.Get, null))
+                    .Returns(Task.FromResult(@""));
+                var streinger = new Streinger(mok.Object);
+
                 //Actual
                 var all = await streinger.Preparations();
                 //Assert
@@ -29,7 +36,11 @@ namespace preparationTests.ServiceTest.StreingerTests
             public async Task GetPreparationsByName()
             {
                 //Arrange
-                var streinger = new Streinger();
+                var mok = new Mock<IExternalDb>();
+                mok.Setup(e => e.AskService(It.IsAny<string>(), HttpMethod.Get, null))
+                    .Returns(Task.FromResult(@""));
+                var streinger = new Streinger(mok.Object);
+
                 string namePrep = "Длянос";
                 //Actual
                 var preparation = await streinger.Preparations(namePrep);
@@ -42,7 +53,11 @@ namespace preparationTests.ServiceTest.StreingerTests
             public async Task GetPreparationsByNameWhenNameInvalid()
             {
                 //Arrange
-                var streinger = new Streinger();
+                var mok = new Mock<IExternalDb>();
+                mok.Setup(e => e.AskService(It.IsAny<string>(), HttpMethod.Get, null))
+                    .Returns(Task.FromResult(@""));
+                var streinger = new Streinger(mok.Object);
+
                 string namePrep = "INVALID_NAME_100_PERCENTS";
                 //Actual
                 var preparation = await streinger.Preparations(namePrep);
@@ -54,7 +69,12 @@ namespace preparationTests.ServiceTest.StreingerTests
             public async Task GetPreparationsByNameWhenNameIsCleanStr()
             {
                 //Arrange
-                var streinger = new Streinger();
+                var mok = new Mock<IExternalDb>();
+                mok.Setup(e => e.AskService(It.IsAny<string>(), HttpMethod.Get, null))
+                    .Returns(Task.FromResult(@""));
+                var streinger = new Streinger(mok.Object);
+
+
                 string namePrep = "";
                 //Actual
                 var preparation = await streinger.Preparations(namePrep);

@@ -1,0 +1,97 @@
+﻿@using Newtonsoft.Json
+@using preparation.Models.DbEntity
+@using preparation.ViewModels.AdminMessenger
+@model IQueryable<preparation.Models.DbEntity.Message>
+@{
+    Layout = "_Layout";
+}
+
+<p>
+    User messages
+</p>
+
+@{
+}
+
+<div class="accordion" id="accordionExample">
+    @foreach (var message in Model)
+    {
+        if (message.Level < MessageLevel.Normal)
+        {
+            continue;
+        }
+
+        <div class="card">
+            <div class="card-header" id="headingOne">
+                <h5 class="mb-0">
+                    <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                        <p>@message.From</p>
+                    </button>
+                </h5>
+            </div>
+
+            <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
+
+                <div class="card-body">
+                    @{var sp = new NewSupplierRequest();}
+                    @foreach (var field in message.GetDictionary())
+                    {
+                        <p><strong>@field.Key:</strong></p>
+
+                        <table class="table table-hover">
+                            <thead>
+                            <tr>
+                                <th scope="col">Type</th>
+                                <th scope="col">Data</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+
+
+                            @{ var values = message.ParseDynamicFromJSON(field.Value.ToString()); }
+                            @if (values == null)
+                            {
+
+                                <tr class="table-secondary">
+                                    <th scope="row" colspan="2">@field.Value</th>
+                                </tr>
+                            }
+                            else
+                            {
+                                sp = JsonConvert.DeserializeObject<NewSupplierRequest>(field.Value.ToString());
+                                foreach (var f in values)
+                                {
+                                    <tr class="table-secondary">
+                                        <th scope="row">@f.Key</th>
+                                        <td>@f.Value</td>
+                                    </tr>
+                                }
+                            }
+
+                            </tbody>
+                        </table>
+
+                        <br/>
+                    }
+                </div>
+                <div class="card-footer">
+                    
+                    @{ViewData["id_message"] = message.Id;}
+                    @await Html.PartialAsync("_TestButtons", sp, ViewData)
+
+                </div>
+            </div>
+            
+        </div>
+    }
+</div>
+
+
+
+
+
+
+@section footer
+    {
+
+}

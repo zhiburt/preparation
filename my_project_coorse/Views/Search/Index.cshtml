@@ -1,0 +1,153 @@
+﻿@using Microsoft.CodeAnalysis.CSharp.Syntax
+@model IEnumerable<preparation.Models.Good>
+@{
+    ViewData["Tittle"] = "Index";
+}
+
+@section css{
+    <link rel="stylesheet" href="~/css/search.css" />
+}
+
+
+<div class="search-box bg-white">
+    <form class="search form-inline" asp-action="Search" method="get">
+        <input name="searchName" class="form-control form-co col col-12" id="" type="text" placeholder="Search">
+    </form>
+
+</div>
+
+@{
+    if (Model == null)
+    {
+        <div class="goods-not-found text-center">
+            <h1 class="display-1">GOODS NOT FOUND !</h1>
+            <h1 class="display-1">:(</h1>
+        </div>
+        <div class="goods">
+            <div class="row" id="goods-append">
+
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="goods">
+            <div class="row card-deck" id="goods-append">
+                @foreach (var good in Model)
+                {
+                    <div class="col col-4 good">
+                        <div class="card shadow-sm">
+                            <div class="card-header">
+                                <div class="d-flex" >
+                                    <div class="">@good.Product.Name</div>
+                                    <div class="ml-auto"> <p class="card-text text-right"><small>type: <strong>@good.Product.Type</strong></small></p></div>
+                                </div>
+                            </div>
+                            @if (good.Product.ImageURL == "")
+                            {
+                                <img class="card-img-top" style="width: 100%; height: 225px; display: block;" src="holder.js/300x225?auto=yes&text=picture%20is%20absent">
+                            }
+                            else
+                            {
+                                <img class="card-img-top" style="width: 100%; height: 225px; display: block;" src="@good.Product.ImageURL">
+                            }
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div class="btn-group">
+                                            <button class="btn btn-sm btn-outline-secondary" type="button">View</button>
+                                            <button class="btn btn-sm btn-outline-secondary" type="button">Edit</button>
+                                        </div>
+                                        <small class="text-muted">min price</small>
+                                    </div>
+                                </div>
+                        </div>
+                    </div>
+                }
+                <div class="col col-4 good">
+                    <div class="card shadow-sm">
+                        <div class="card-header">
+                        </div>
+                        <img class="card-img-top" style="width: 100%; height: 225px; display: block;" src="holder.js/300x225?auto=yes&text=picture%20is%20absent">
+                        <div class="card-body">
+                            <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="btn-group">
+                                    <button class="btn btn-sm btn-outline-secondary" type="button">View</button>
+                                    <button class="btn btn-sm btn-outline-secondary" type="button">Edit</button>
+                                </div>
+                                <small class="text-muted">9 mins</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col col-4 good">
+                    <div class="card shadow-sm">
+                        <div class="card-header">
+                        </div>
+                        <img class="card-img-top" style="width: 100%; height: 225px; display: block;" src="holder.js/300x225?auto=yes&text=picture%20is%20absent">
+                        <div class="card-body">
+                            <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="btn-group">
+                                    <button class="btn btn-sm btn-outline-secondary" type="button">View</button>
+                                    <button class="btn btn-sm btn-outline-secondary" type="button">Edit</button>
+                                </div>
+                                <small class="text-muted">9 mins</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col col-4 good">
+                    <div class="card shadow-sm">
+                        <div class="card-header">
+                        </div>
+                        <img class="card-img-top" style="width: 100%; height: 225px; display: block;" src="holder.js/300x225?auto=yes&text=picture%20is%20absent">
+                        <div class="card-body">
+                            <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="btn-group">
+                                    <button class="btn btn-sm btn-outline-secondary" type="button">View</button>
+                                    <button class="btn btn-sm btn-outline-secondary" type="button">Edit</button>
+                                </div>
+                                <small class="text-muted">9 mins</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col col-4 good">
+                    <div class="card shadow-sm">
+                        <div class="card-header">
+                        </div>
+                        <img class="card-img-top" style="width: 100%; height: 225px; display: block;" src="holder.js/300x225?auto=yes&text=picture%20is%20absent">
+                        <div class="card-body">
+                            <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="btn-group">
+                                    <button class="btn btn-sm btn-outline-secondary" type="button">View</button>
+                                    <button class="btn btn-sm btn-outline-secondary" type="button">Edit</button>
+                                </div>
+                                <small class="text-muted">9 mins</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+}
+
+<div class="alert alert-warning alert-dismissible fade show" role="alert">
+    <strong>Holy guacamole!</strong> You should check in on some of those fields below.
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+
+@section footer
+{
+    @{await Html.RenderPartialAsync("_SmallFooter");}
+}
+
+@section js{
+    <script src="~/lib/holder/holder.min.js"></script>
+}

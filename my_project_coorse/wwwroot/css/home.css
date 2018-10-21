@@ -1,0 +1,29 @@
+﻿body {
+    background-color: slategray;
+}
+
+.video-preview-block {
+    padding-left: 0;
+    padding-right: 0;
+    background-color: black;
+}
+
+.video-preview {
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+
+.content-block {
+    padding-top: 2rem;
+    background-color: whitesmoke;
+}
+
+.join-us {
+    padding-top: 4rem;
+    padding-bottom: 4rem;
+    margin-bottom: 2rem;
+}
+
+.join-content {
+    padding-bottom: 1rem;
+}

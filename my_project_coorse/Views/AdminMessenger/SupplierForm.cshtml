@@ -1,0 +1,90 @@
+﻿@model preparation.ViewModels.AdminMessenger.NewSupplierRequest
+
+@{
+    Layout = "_Layout";
+}
+
+<div class="d-flex align-items-center p-3 my-3 text-white-50 bg-purple rounded shadow-sm">
+    <img width="48" height="48" class="mr-3" alt="" src="~/images/home/307609.svg">
+    <div class="text-secondary">
+        <h6 class="mb-0 ">Health</h6>
+        <small>Since 2011</small>
+    </div>
+</div>
+
+<div class="my-3 p-3 bg-white rounded shadow-sm">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-5 order-md-1">
+                <form method="post" asp-action="SupplierForm">
+                    <div asp-validation-summary="ModelOnly"></div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="Name"></label>
+                            <input class="form-control" asp-for="Name">
+                            <span asp-validation-for="Name"></span>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="Company"></label>
+                            <input class="form-control" asp-for="Company">
+                            <span asp-validation-for="Company"></span>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="Address"></label>
+                        <input class="form-control" asp-for="Address">
+                        <span asp-validation-for="Address"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="Geolocation"></label>
+                        <input class="form-control" asp-for="Geolocation">
+                        <span asp-validation-for="Geolocation"></span>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-5 mb-3">
+                            <label asp-for="Country"></label>
+                            <select asp-for="Country" class="custom-select d-block w-100" id="country" required="">
+                                <option value="">Choose...</option>
+                                <option>Belarus</option>
+                                <option>United States</option>
+                            </select>
+                            <span asp-validation-for="Country"></span>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label asp-for="Description"></label>
+                        <textarea class="form-control" asp-for="Description"></textarea>
+                        <span asp-validation-for="Description"></span>
+
+                    </div>
+
+                    <hr class="mb-4">
+                    <div class="custom-control custom-checkbox">
+                        <input class="custom-control-input" asp-for="AgreementConfirm" type="checkbox">
+                        <label class="custom-control-label" asp-for="AgreementConfirm">Shipping address is the same as my billing address</label>
+                        <span asp-validation-for="AgreementConfirm"></span>
+
+                    </div>
+                    <input type="hidden" asp-for="UserName" value="@User.Identity.Name"/>
+                    <hr class="mb-4">
+                    <button class="btn btn-primary btn-lg btn-block" type="submit">Continue to checkout</button>
+                </form>
+            </div>
+        </div>
+        <footer class="my-5 pt-5 text-muted text-center text-small">
+            <p class="mb-1">© 2017-2018 Company Name</p>
+            <ul class="list-inline">
+                <li class="list-inline-item"><a href="#">Privacy</a></li>
+                <li class="list-inline-item"><a href="#">Terms</a></li>
+                <li class="list-inline-item"><a href="#">Support</a></li>
+            </ul>
+        </footer>
+    </div>
+</div>
+
+@section footer
+{
+
+}

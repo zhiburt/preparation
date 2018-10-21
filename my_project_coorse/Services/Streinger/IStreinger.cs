@@ -1,21 +1,23 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
 using preparation.Models;
 
 namespace preparation.Services.Streinger
 {
     public interface IStreinger
     {
-        /// <summary>
-        /// Return Preparations By Supplier Name and Supplier Address
-        /// </summary>
-        /// <param name="suppName">Supplier Name</param>
-        /// <param name="suppAddress">Supplier Address</param>
-        /// <returns>returns Preparations</returns>
-        Task<Supplier> Suppliers(string suppName, string suppAddress);
-
-        Task<Preparation> Preparations(string prepName);
+        Task<bool> AddGood(Good good);
+        Task<bool> AddSupplier(Supplier s);
+        Task<IEnumerable<Good>> Goods();
+        Task<IEnumerable<Good>> Goods(string prepName);
         Task<IEnumerable<Preparation>> Preparations();
+        Task<Preparation> Preparations(int prepId);
+        Task<Preparation> Preparations(string prepName);
+        Task<bool> RemoveGood(Good good);
+        Task<bool> RemoveSupplier(Supplier s);
+        Task<IQueryable<Supplier>> Suppliers();
+        Task<Supplier> Suppliers(int supplierId);
+        Task<Supplier> Suppliers(string suppName, string suppAddress);
     }
 }

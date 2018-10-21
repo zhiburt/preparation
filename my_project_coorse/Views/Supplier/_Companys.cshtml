@@ -1,0 +1,21 @@
+﻿@using preparation.Models
+@{
+
+    <div class="list-group">
+        @if (ViewData["company"] != null)
+        {
+            var companys = (IEnumerable<Supplier>)ViewData["company"];
+            foreach (var c in companys)
+            {
+                <a class="list-group-item list-group-item-action flex-column align-items-start active" href="#">
+                    <div class="d-flex w-100 justify-content-between">
+                        <h5 class="mb-1">@c.Id</h5>
+                        <small>@c.Address</small>
+                    </div>
+                    <p class="mb-1"><small>@c.Name</small></p>
+                </a>
+            }
+
+        }
+    </div>
+}

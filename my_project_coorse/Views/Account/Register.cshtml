@@ -1,0 +1,98 @@
+﻿@model preparation.ViewModels.Account.UserRegisterViewModel
+@section navbar
+    {
+
+}
+
+
+<div class="container">
+    <div class="py-5 text-center">
+        <img width="200" height="400" class="d-block mx-auto mb-4" alt="" src="~/images/logo/logo_v2.svg">
+        <h2>Checkout form</h2>
+        <p class="lead">Below is an example form built entirely with Bootstrap's form controls. Each required form group has a validation state that can be triggered by attempting to submit the form without completing it.</p>
+    </div>
+    <div class="row">
+        <div class="col-md-12 order-md-1">
+            <form method="post" asp-controller="Account" asp-action="Register">
+                <div asp-validation-summary="ModelOnly"></div>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="FirstName"></label>
+                        <input class="form-control" asp-for="FirstName">
+                        <span asp-validation-for="FirstName"></span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="Surname"></label>
+                        <input class="form-control" asp-for="Surname">
+                        <span asp-validation-for="Surname"></span>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="Username"></label>
+                    <input class="form-control" asp-for="Username">
+                    <span asp-validation-for="Username"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="Email"></label>
+                    <input class="form-control" asp-for="Email">
+                    <span asp-validation-for="Email"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="Address"></label>
+                    <span class="text-muted">(Optional)</span>
+                    <input class="form-control" asp-for="Address">
+                    <span asp-validation-for="Address"></span>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-5 mb-3">
+                        <label asp-for="Country"></label>
+                        <select asp-for="Country" class="custom-select d-block w-100" id="country" required="">
+                            <option value="">Choose...</option>
+                            <option>United States</option>
+                        </select>
+                        <span asp-validation-for="Country"></span>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="Password"></label>
+                        <input class="form-control" asp-for="Password">
+                        <span asp-validation-for="Password"></span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="PasswordConfirm"></label><br />
+                        <input class="form-control" asp-for="PasswordConfirm" />
+                        <span asp-validation-for="PasswordConfirm"></span>
+                    </div>
+                </div>
+
+                <hr class="mb-4">
+                <div class="custom-control custom-checkbox">
+                    <input class="custom-control-input" asp-for="AgreementConfirm" type="checkbox">
+                    <label class="custom-control-label" asp-for="AgreementConfirm">Shipping address is the same as my billing address</label>
+                </div>
+                <div class="custom-control custom-checkbox">
+                    <input class="custom-control-input" id="save-info" type="checkbox">
+                    <label class="custom-control-label" for="save-info">Save this information for next time</label>
+                </div>
+                <hr class="mb-4">
+                <button class="btn btn-primary btn-lg btn-block" type="submit">Continue to checkout</button>
+            </form>
+        </div>
+    </div>
+    <footer class="my-5 pt-5 text-muted text-center text-small">
+        <p class="mb-1">© 2017-2018 Company Name</p>
+        <ul class="list-inline">
+            <li class="list-inline-item"><a href="#">Privacy</a></li>
+            <li class="list-inline-item"><a href="#">Terms</a></li>
+            <li class="list-inline-item"><a href="#">Support</a></li>
+        </ul>
+    </footer>
+</div>
+
+@section footer
+    {
+
+}

@@ -1,0 +1,16 @@
+﻿@model preparation.ViewModels.AdminMessenger.NewSupplierRequest
+
+<footer class="footer clearfix">
+    <form class="float-left" asp-action="ApproveOfSupplier" asp-route-messageId="@ViewData["id_message"]" method="post">
+        <input type="hidden" asp-for="Name" value="@Model.Name">
+        <input type="hidden" asp-for="Address" value="@Model.Address">
+        <input type="hidden" asp-for="Company" value="@Model.Company">
+        <input type="hidden" asp-for="Description" value="@Model.Description">
+        <input type="hidden" asp-for="Geolocation" value="@Model.Geolocation">
+        <input type="hidden" asp-for="AgreementConfirm" value="@Model.AgreementConfirm">
+        <input type="hidden" asp-for="Country" value="@Model.Country">
+        <input type="hidden" asp-for="UserName" value="@Model.UserName">
+        <button class="btn btn-outline-success">Approve</button>
+    </form>
+    <a asp-action="RemoveMessage" asp-route-messageId="@ViewData["id_message"]" asp-route-returnUrl="@Context.Request.Path" class="btn btn-outline-danger float-right">Disapprove</a>
+</footer>
