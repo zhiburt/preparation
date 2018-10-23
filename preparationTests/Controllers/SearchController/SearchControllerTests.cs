@@ -19,76 +19,62 @@ namespace preparationTests.Controllers.SearchController
 {
     public class SearchControllerTests
     {
-        public class Get
+        public class Search
         {
             [Fact]
-            public async Task SearchWhenServiceResponceValidData()
+            public async Task SearchWhenProductExists()
             {
                 //Arrange
                 var goods = new[]
                 {
-                    new Good() { Price = 12.2m, Product = new Preparation(){Name = "hello_world"}},
                     new Good() { Price = 2.12m, Product = new Preparation(){Name = "_world_"}},
+                    new Good() { Price = 12.2m, Product = new Preparation(){Name = "hello_world"}},
                 };
                 var mok = new Mock<IStreinger>();
-                mok.Setup(m => m.Goods("_find_"))
+                mok.Setup(m => m.Goods())
                     .ReturnsAsync(goods);
-
                 var seachController = new preparation.Controllers.SearchController(mok.Object);
-                var expected = goods;
+
+                IEnumerable <IEnumerable<IProduct>> expected = new[]
+                {
+                    new[]{goods[0]},
+                    new[]{goods[1]},
+                };
+
                 //Actual
-                var resp = await seachController.Search("_find_");
+                var resp = await seachController.Search("_world");
                 //Assert
                 var viewResult = Assert.IsType<ViewResult>(resp);
-                IEnumerable<Good> model =
-                    Assert.IsAssignableFrom<IEnumerable<Good>>(viewResult.ViewData.Model);
+                IEnumerable<IEnumerable<IProduct>> model =
+                    Assert.IsAssignableFrom<IEnumerable<IEnumerable<IProduct>>>(viewResult.ViewData.Model);
                 Assert.Equal(expected, model);
             }
 
             [Fact]
-            public async Task SearchWhenServiceResponceInValidData()
+            public async Task SearchWhenProductDoesntExist()
             {
                 //Arrange
                 var goods = new[]
                 {
-                    new Good() { Price = 12.2m, Product = new Preparation(){Name = "hello_world"}},
-                    new Good() { Price = 2.12m, Product = new Preparation(){Name = "_world_"}},
+                    new Good() { Price = 2.12m, Product = new Preparation(){Name = "_world_"}}
                 };
                 var mok = new Mock<IStreinger>();
-                mok.Setup(m => m.Goods("_find_"))
+                mok.Setup(m => m.Goods())
                     .ReturnsAsync(goods);
-
                 var seachController = new preparation.Controllers.SearchController(mok.Object);
-                var expected = goods;
+
                 //Actual
-                var resp = await seachController.Search("_find_");
+                var resp = await seachController.Search("_not_found");
                 //Assert
                 var viewResult = Assert.IsType<ViewResult>(resp);
-                IEnumerable<Good> model =
-                    Assert.IsAssignableFrom<IEnumerable<Good>>(viewResult.ViewData.Model);
-                Assert.Equal(expected, model);
+                var model = viewResult.ViewData.Model;
+
+                Assert.Null(model);
             }
 
+            
             [Fact]
-            public async Task SearchWhenServiceResponceInvalidData()
-            {
-                //Arrange
-                var mok = new Mock<IStreinger>();
-                mok.Setup(m => m.Goods("_find_invalid_"))
-                    .ReturnsAsync((IEnumerable<Good>)null);
-
-                var seachController = new preparation.Controllers.SearchController(mok.Object);
-                //Actual
-                var resp = await seachController.Search("_find_invalid_");
-                //Assert
-                var viewResult = Assert.IsType<ViewResult>(resp);
-                //IEnumerable<Good> model =
-                //    Assert.IsAssignableFrom<IEnumerable<Good>>(viewResult.ViewData.Model);
-                Assert.Null(viewResult.ViewData.Model);
-            }
-
-            [Fact]
-            public async Task PreparationsWhenSearchIsEmptyStr()
+            public async Task SearchWhenInputIsEmptyStr()
             {
                 //Arrange
                 var mok = new Mock<IExternalDb>();

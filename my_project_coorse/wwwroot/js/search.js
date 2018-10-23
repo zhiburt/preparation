@@ -1,6 +1,12 @@
 ﻿//var img = $('.placeholder-img');
 //Holder.setResizeUpdate(img, true);
 
+var referenceElement = $('.tooltip-ref-address');
+
+let tooltip = new Tooltip(referenceElement, {
+    placement: 'right' // or bottom, left, right, and variations
+});
+
 $("#search-bar").keyup(function () { // this isn't nessesery event
     const searchText = $('#search-bar').val();
 
@@ -62,4 +68,47 @@ function AddTo(block, elem) {
                              </div>
                          </div>
                      </div>`);
+}
+
+
+
+//Add To cart
+$(".addToCart").click(function () { // this isn't nessesery event
+
+    const prodName = getProdName(this);
+    const prodSupp = getProdSupp(this);
+    const prodSuppAddress = getProdSuppAddress(this);
+
+
+    $.ajax({
+        type: "PUT",
+        dataType: "json",
+        url: "../api/ajax/addProduct", // replace 'PHP-FILE.php with your php file
+        data: {
+            productName: prodName,
+            supplier : prodSupp,
+            addressSupplier : prodSuppAddress
+        },
+        success: function (data) {
+            
+        },
+        error: function () {
+            $('.goods-not-found').show();
+            console.log('Some error occurred! search text = ' + searchText);
+        }
+    });
+});
+
+function getProdName(block) {
+
+}
+
+
+function getProdSupp(block) {
+
+}
+
+
+function getProdSuppAddress(block) {
+
 }

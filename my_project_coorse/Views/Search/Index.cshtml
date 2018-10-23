@@ -1,11 +1,12 @@
 ﻿@using Microsoft.CodeAnalysis.CSharp.Syntax
-@model IEnumerable<preparation.Models.Good>
+@model IEnumerable<IEnumerable<preparation.Models.IProduct>>
 @{
     ViewData["Tittle"] = "Index";
 }
 
 @section css{
     <link rel="stylesheet" href="~/css/search.css" />
+    <link rel="stylesheet" href="~/css/card.css" />
 }
 
 
@@ -32,40 +33,171 @@
     else
     {
         <div class="goods">
-            <div class="row card-deck" id="goods-append">
-                
-                
+            <div class="row card-deck active-with-click" id="goods-append">
+                <div class="col-md-4 col-sm-6 good">
+                    <article class="material-card Purple">
+                        <h2>
+                            <span>Christopher Walken</span>
+                            <strong>
+                                <i class="fa fa-fw fa-star"></i>
+                                The Deer Hunter
+                            </strong>
+                        </h2>
+                        <div class="mc-content">
+                            <div class="img-container">
+                                <img class="img-responsive" style="width: 100%;" src="http://u.lorenzoferrara.net/marlenesco/material-card/thumb-christopher-walken.jpg">
+                            </div>
+                            <div class="mc-description">
+                                He has appeared in more than 100 films and television shows, including The Deer Hunter, Annie Hall, The Prophecy trilogy, The Dogs of War ...
+                            </div>
+                        </div>
+                        <a class="mc-btn-action">
+                            <i class="fa fa-bars"></i>
+                        </a>
+                        <div class="mc-footer">
+                            <h4>
+                                Social
+                            </h4>
+                            <a class="fa fa-fw fa-facebook"></a>
+                            <a class="fa fa-fw fa-twitter"></a>
+                            <a class="fa fa-fw fa-linkedin"></a>
+                            <a class="fa fa-fw fa-google-plus"></a>
+                        </div>
+                    </article>
+                </div>
 
-                @foreach (var good in Model)
+
+
+                @{
+
+                    string GetIterator(int i)
+                    {
+                        return $"exampleModalCenter_{i}";
+                    }
+
+                    int id_iterator = 0;
+                }
+                @foreach (var products in Model)
                 {
-                    <div class="col col-4 good">
-                        <div class="card shadow-sm">
-                            <div class="card-header">
-                                <div class="d-flex">
-                                    <div class="">@good.Product.Name</div>
-                                    <div class="ml-auto">
-                                        <p class="card-text text-right"><small>type: <strong>@good.Product.Type</strong></small></p></div>
+                    var good = products.First();
+
+                    <div class="col-md-4 col-sm-6 good">
+                        <article class="material-card Purple">
+                            <h2>
+                                <span class="product-name">@good.Product.Name</span>
+                                <strong>
+                                    <i class="fa fa-fw fa-star supplier-name"></i>
+                                    @good.Supplier.Name
+                                </strong>
+                            </h2>
+                            <div class="mc-content">
+                                <div class="img-container">
+                                    <a data-toggle="modal" data-target="#@GetIterator(id_iterator)">
+                                        <img class="img-responsive" style="width: 100%" src="@good.Product.ImageURL">
+                                    </a>
+                                </div>
+                                <div class="mc-description">
+                                    @good.Product.Description
                                 </div>
                             </div>
-                            @if (good.Product.ImageURL == "")
-                            {
-                                <img class="card-img-top" style="width: 100%; height: 225px; display: block;" src="holder.js/300x225?auto=yes&text=picture%20is%20absent">
-                            }
-                            else
-                            {
-                                <img class="card-img-top" style="width: 100%; height: 225px; display: block;" src="@good.Product.ImageURL">
-                            }
-                            <div class="card-body">
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <div class="btn-group">
-                                        <button class="btn btn-sm btn-outline-secondary" type="button">View</button>
-                                        <button class="btn btn-sm btn-outline-secondary" type="button">Edit</button>
+                            <a class="mc-btn-action">
+                                <i class="fa fa-bars"></i>
+                            </a>
+                            <div class="mc-footer d-flex">
+                                <h4>
+                                    @good.Product.Type
+                                </h4>
+                                <h3 class=" text-center mr-auto p-2"><a class="font-weight-bold"><i>@good.Price.ToString("N2") $</i></a></h3>
+                                <a class="p-2 mr-3 addToCart"><i class="fa fa-2x fa-cart-plus"></i></a>
+                            </div>
+                        </article>
+                    </div>
+
+                    <!-- Modal -->
+                    <div class="modal fade" id="@GetIterator(id_iterator)" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalCenterTitle">Modal title</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="container-fluid">
+                                        <div class="row">
+                                            <table class="table table-dark table-sm table-bordered">
+                                                <thead>
+                                                    <tr>
+                                                        <th scope="col">#</th>
+                                                        <th scope="col">Price</th>
+                                                        <th scope="col">CompanyName</th>
+                                                        <th scope="col">Company</th>
+                                                        <th scope="col">Buy</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @{ int i = 0;}
+                                                    @foreach (var prod in products)
+                                                    {
+                                                        <tr>
+                                                            <th scope="row">@i</th>
+                                                            <td>@prod.Price.ToString("N2")</td>
+                                                            <td class="tooltip-ref-address" data-toggle="tooltip" data-placement="top" title="@(prod.Supplier.Address == "" ? "Address is empty" : prod.Supplier.Address)">
+                                                                @prod.Supplier.Name
+                                                            </td>
+                                                            <td>@prod.Supplier.Company</td>
+                                                            <td><a class="btn btn-sm btn-block btn-success">BUY</a></td>
+                                                        </tr>
+                                                        {
+                                                            ++i;
+                                                        }
+                                                    }
+                                                </tbody>
+                                            </table>
+                                        </div>
                                     </div>
-                                    <small class="text-muted">min price</small>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    <button type="button" class="btn btn-primary">Save changes</button>
                                 </div>
                             </div>
                         </div>
                     </div>
+
+                    {
+                        ++id_iterator;
+                    }
+                    @*<div class="col col-md-4 col-sm-6 good">
+                            <div class="card shadow-sm">
+                                <div class="card-header">
+                                    <div class="d-flex">
+                                        <div class="">@good.Product.Name</div>
+                                        <div class="ml-auto">
+                                            <p class="card-text text-right"><small>type: <strong>@good.Product.Type</strong></small></p>
+                                        </div>
+                                    </div>
+                                </div>
+                                @if (good.Product.ImageURL == "")
+                                {
+                                    <img class="card-img-top" style="width: 100%; height: 225px; display: block;" src="holder.js/300x225?auto=yes&text=picture%20is%20absent">
+                                }
+                                else
+                                {
+                                    <img class="card-img-top" style="width: 100%; height: 225px; display: block;" src="@good.Product.ImageURL">
+                                }
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div class="btn-group">
+                                            <button class="btn btn-sm btn-outline-secondary" type="button">View</button>
+                                            <button class="btn btn-sm btn-outline-secondary" type="button">Edit</button>
+                                        </div>
+                                        <small class="text-muted">min price</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>*@
                 }
                 <div class="col col-4 good">
                     <div class="card shadow-sm">
@@ -148,10 +280,42 @@
 </div>
 
 @section footer
-{
+    {
     @{await Html.RenderPartialAsync("_SmallFooter");}
 }
 
 @section js{
     <script src="~/lib/holder/holder.min.js"></script>
+    @*//Card*@
+    <script>
+        $(function () {
+            $('.material-card > .mc-btn-action').click(function () {
+                var card = $(this).parent('.material-card');
+                var icon = $(this).children('i');
+                icon.addClass('fa-spin-fast');
+
+                if (card.hasClass('mc-active')) {
+                    card.removeClass('mc-active');
+
+                    window.setTimeout(function () {
+                        icon
+                            .removeClass('fa-arrow-left')
+                            .removeClass('fa-spin-fast')
+                            .addClass('fa-bars');
+
+                    }, 800);
+                } else {
+                    card.addClass('mc-active');
+
+                    window.setTimeout(function () {
+                        icon
+                            .removeClass('fa-bars')
+                            .removeClass('fa-spin-fast')
+                            .addClass('fa-arrow-left');
+
+                    }, 800);
+                }
+            });
+        });
+    </script>
 }

@@ -35,25 +35,26 @@ namespace preparation.Controllers
 
         [HttpPut]
         [Route("addProduct")]
-        public async Task<bool> AddProduct(int productId)
+        public async Task<bool> AddProduct(string productName, string supplier, string addressSupplier)
         {
-            if (productId <= 0) throw new ArgumentOutOfRangeException(nameof(productId));
-
             Cart cart = new Cart(HttpContext);
-            var prod = (await _streinger.Goods()).First(g => g.Id == productId);
+            var prod = (await _streinger.Goods()).First(g => g.Product.Name == productName &&
+                                                             g.Supplier.Name == supplier &&
+                                                             g.Supplier.Address == addressSupplier);
             cart.AddProduct( prod );
             return true;
         }
 
         [HttpDelete]
         [Route("addProduct")]
-        public async Task<bool> DeleteProduct(int productId)
+        public async Task<bool> DeleteProduct(string productName, string supplier, string addressSupplier)
         {
-            if (productId <= 0) throw new ArgumentOutOfRangeException(nameof(productId));
 
             Cart cart = new Cart(HttpContext);
-            var prod = (await _streinger.Goods()).First(g => g.Id == productId);
-            cart.AddProduct(prod);
+            var prod = (await _streinger.Goods()).First(g => g.Product.Name == productName &&
+                                                             g.Supplier.Name == supplier &&
+                                                             g.Supplier.Address == addressSupplier);
+            cart.Remove(prod);
             return true;
         }
     }
