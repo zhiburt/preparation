@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace preparation.Models
 {
-    public class Preparation
+    public class Preparation : IGood
     {
         public Preparation()
         {

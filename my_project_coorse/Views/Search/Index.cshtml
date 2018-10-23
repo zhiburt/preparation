@@ -33,14 +33,18 @@
     {
         <div class="goods">
             <div class="row card-deck" id="goods-append">
+                
+                
+
                 @foreach (var good in Model)
                 {
                     <div class="col col-4 good">
                         <div class="card shadow-sm">
                             <div class="card-header">
-                                <div class="d-flex" >
+                                <div class="d-flex">
                                     <div class="">@good.Product.Name</div>
-                                    <div class="ml-auto"> <p class="card-text text-right"><small>type: <strong>@good.Product.Type</strong></small></p></div>
+                                    <div class="ml-auto">
+                                        <p class="card-text text-right"><small>type: <strong>@good.Product.Type</strong></small></p></div>
                                 </div>
                             </div>
                             @if (good.Product.ImageURL == "")
@@ -51,15 +55,15 @@
                             {
                                 <img class="card-img-top" style="width: 100%; height: 225px; display: block;" src="@good.Product.ImageURL">
                             }
-                                <div class="card-body">
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <div class="btn-group">
-                                            <button class="btn btn-sm btn-outline-secondary" type="button">View</button>
-                                            <button class="btn btn-sm btn-outline-secondary" type="button">Edit</button>
-                                        </div>
-                                        <small class="text-muted">min price</small>
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div class="btn-group">
+                                        <button class="btn btn-sm btn-outline-secondary" type="button">View</button>
+                                        <button class="btn btn-sm btn-outline-secondary" type="button">Edit</button>
                                     </div>
+                                    <small class="text-muted">min price</small>
                                 </div>
+                            </div>
                         </div>
                     </div>
                 }

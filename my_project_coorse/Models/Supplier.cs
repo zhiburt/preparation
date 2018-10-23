@@ -2,7 +2,7 @@
 
 namespace preparation.Models
 {
-    public class Supplier
+    public class Supplier : ISupplier
     {
         public Supplier()
         {

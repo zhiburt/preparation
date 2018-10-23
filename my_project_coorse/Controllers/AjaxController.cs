@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using preparation.Models;
+using preparation.Services.Cart;
 using preparation.Services.Streinger;
 
 namespace preparation.Controllers
@@ -30,7 +31,30 @@ namespace preparation.Controllers
             }
 
             return await _streinger.Goods(search);
+        }
 
+        [HttpPut]
+        [Route("addProduct")]
+        public async Task<bool> AddProduct(int productId)
+        {
+            if (productId <= 0) throw new ArgumentOutOfRangeException(nameof(productId));
+
+            Cart cart = new Cart(HttpContext);
+            var prod = (await _streinger.Goods()).First(g => g.Id == productId);
+            cart.AddProduct( prod );
+            return true;
+        }
+
+        [HttpDelete]
+        [Route("addProduct")]
+        public async Task<bool> DeleteProduct(int productId)
+        {
+            if (productId <= 0) throw new ArgumentOutOfRangeException(nameof(productId));
+
+            Cart cart = new Cart(HttpContext);
+            var prod = (await _streinger.Goods()).First(g => g.Id == productId);
+            cart.AddProduct(prod);
+            return true;
         }
     }
 }
