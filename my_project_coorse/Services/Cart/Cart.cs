@@ -18,7 +18,8 @@ namespace preparation.Services.Cart
         {
             _context = context;
 
-            foreach (var key in CartKeys())
+            var keys = CartKeys();
+            foreach (var key in keys)
             {
                 iteratorSesssonName++;
             }

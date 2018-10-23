@@ -1,4 +1,6 @@
-﻿        <div class="row">
+﻿@model IEnumerable<preparation.Models.IProduct>
+
+<div class="row">
 
     <div class="col-md-4 order-last mb-4">
         <h4 class="d-flex justify-content-between align-items-center mb-3">
@@ -6,13 +8,23 @@
             <span class="badge badge-secondary badge-pill">3</span>
         </h4>
         <ul class="list-group mb-3">
-            <li class="list-group-item d-flex justify-content-between lh-condensed">
-                <div>
-                    <h6 class="my-0">Product name</h6>
-                    <small class="text-muted">Brief description</small>
-                </div>
-                <span class="text-muted">$12</span>
-            </li>
+            @*<li class="list-group-item d-flex justify-content-between lh-condensed">
+                    <div>
+                        <h6 class="my-0">Product name</h6>
+                        <small class="text-muted">Brief description</small>
+                    </div>
+                    <span class="text-muted">$12</span>
+                </li>*@
+            @foreach (var m in Model)
+            {
+                <li class="list-group-item d-flex justify-content-between lh-condensed">
+                    <div>
+                        <h6 class="my-0">@m.Product.Name</h6>
+                        <small class="text-muted">Brief description</small>
+                    </div>
+                    <span class="text-muted">@m.Price.ToString("F2") $</span>
+                </li>
+            }
             <li class="list-group-item d-flex justify-content-between lh-condensed">
                 <div>
                     <h6 class="my-0">Second product</h6>

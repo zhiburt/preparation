@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using System;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -64,6 +65,16 @@ namespace preparation
 
             });
 
+            services.AddDistributedMemoryCache();
+
+            services.AddSession(options =>
+            {
+                // Set a short timeout for easy testing.
+                options.IdleTimeout = TimeSpan.FromHours(1);
+                options.Cookie.HttpOnly = true;
+            });
+
+
             services.AddSingleton<IExternalDb, ExternalDb>();
             services.AddSingleton<IStreinger, Streinger>();
             services.AddScoped<IMessenger, Messenger>();
@@ -91,6 +102,8 @@ namespace preparation
             app.UseCookiePolicy();
 
             app.UseAuthentication();
+            app.UseSession();
+
 
             app.UseMvc(router =>
             {

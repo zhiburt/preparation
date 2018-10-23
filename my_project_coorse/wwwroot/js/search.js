@@ -1,11 +1,11 @@
 ﻿//var img = $('.placeholder-img');
 //Holder.setResizeUpdate(img, true);
 
-var referenceElement = $('.tooltip-ref-address');
+//var referenceElement = $('.tooltip-ref-address');
 
-let tooltip = new Tooltip(referenceElement, {
-    placement: 'right' // or bottom, left, right, and variations
-});
+//let tooltip = new Tooltip(referenceElement, {
+//    placement: 'right' // or bottom, left, right, and variations
+//});
 
 $("#search-bar").keyup(function () { // this isn't nessesery event
     const searchText = $('#search-bar').val();
@@ -16,7 +16,7 @@ $("#search-bar").keyup(function () { // this isn't nessesery event
         url: "../api/ajax/getGoods", // replace 'PHP-FILE.php with your php file
         data: { search: searchText },
         success: function (data) {
-            if (data == null) {
+            if (data === null) {
                 $('.goods-not-found').show();
                 $('#goods-append').html('');
                 console.log("clear data");
@@ -73,42 +73,53 @@ function AddTo(block, elem) {
 
 
 //Add To cart
-$(".addToCart").click(function () { // this isn't nessesery event
+$(".addToCart").on("click", function () { // this isn't nessesery event
+    console.log("I'm HERE! HELP ME PLEASE!");
+    var  prodName = getProdName(this);
+    var  prodSupp = getProdSupp(this);
+    var prodSuppAddress = getProdSuppAddress(this);
 
-    const prodName = getProdName(this);
-    const prodSupp = getProdSupp(this);
-    const prodSuppAddress = getProdSuppAddress(this);
-
+    var model = {
+        productName: prodName,
+        supplier: prodSupp,
+        addressSupplier: prodSuppAddress
+    };
+    console.log(model);
 
     $.ajax({
-        type: "PUT",
+        type: 'POST',
+        contentType: "application/json; charset=utf-8",
         dataType: "json",
         url: "../api/ajax/addProduct", // replace 'PHP-FILE.php with your php file
-        data: {
-            productName: prodName,
-            supplier : prodSupp,
-            addressSupplier : prodSuppAddress
-        },
+        data: JSON.stringify(model),
         success: function (data) {
-            
+            console.log('vlid!');
         },
         error: function () {
             $('.goods-not-found').show();
-            console.log('Some error occurred! search text = ' + searchText);
+            console.log('Some error occurred!');
         }
     });
 });
 
 function getProdName(block) {
-
+    var card = $(block).closest('.material-card');
+    var b = card.find('.product-name')[0];
+    return b.textContent;
 }
 
 
 function getProdSupp(block) {
-
+    var card = $(block).closest('.material-card');
+    var b = card.find('.supplier-name')[0];
+    return b.innerText;
 }
 
 
 function getProdSuppAddress(block) {
-
+    var card = $(block).closest('.card-data');
+    var modal = card.find('.modal');
+    var founds = modal.find('.supplier-address');
+    var b = founds[0];
+    return b.title;
 }

@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using preparation.Models;
 using preparation.Services.Cart;
 using preparation.Services.Streinger;
+using preparation.ViewModels.Ajax;
 
 namespace preparation.Controllers
 {
@@ -33,20 +34,25 @@ namespace preparation.Controllers
             return await _streinger.Goods(search);
         }
 
-        [HttpPut]
+        [HttpPost]
         [Route("addProduct")]
-        public async Task<bool> AddProduct(string productName, string supplier, string addressSupplier)
+        public async Task<bool> AddProduct([FromBody]AddProductToCartViewModel model)
         {
-            Cart cart = new Cart(HttpContext);
-            var prod = (await _streinger.Goods()).First(g => g.Product.Name == productName &&
-                                                             g.Supplier.Name == supplier &&
-                                                             g.Supplier.Address == addressSupplier);
-            cart.AddProduct( prod );
-            return true;
+            if (ModelState.IsValid)
+            {
+                Cart cart = new Cart(HttpContext);
+                var prod = (await _streinger.Goods()).First(g => g.Product.Name == model.ProductName &&
+                                                                 g.Supplier.Name == model.Supplier &&
+                                                                 g.Supplier.Address == model.AddressSupplier);
+                cart.AddProduct(prod);
+                return true;
+            }
+
+            return false;
         }
 
-        [HttpDelete]
-        [Route("addProduct")]
+        [HttpPost]
+        [Route("removeProduct")]
         public async Task<bool> DeleteProduct(string productName, string supplier, string addressSupplier)
         {
 
