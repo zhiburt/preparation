@@ -143,11 +143,9 @@
                                                                 <tr>
                                                                     <th scope="row">@i</th>
                                                                     <td>@prod.Price.ToString("N2")</td>
-                                                                    <td class="tooltip-ref-address supplier-address" data-toggle="tooltip" data-placement="top" title="@(prod.Supplier.Address == "" ? "Address is empty" : prod.Supplier.Address)">
-                                                                        @prod.Supplier.Name
-                                                                    </td>
+                                                                    <td class="tooltip-ref-address supplier-name supplier-address" data-toggle="tooltip" data-placement="top" title="@(prod.Supplier.Address == "" ? "Address is empty" : prod.Supplier.Address)">@prod.Supplier.Name</td>
                                                                     <td>@prod.Supplier.Company</td>
-                                                                    <td><a class="btn btn-sm btn-block btn-success">BUY</a></td>
+                                                                    <td><a class="btn btn-sm btn-block btn-success addToCart-table">BUY</a></td>
                                                                 </tr>
                                                                 {
                                                                     ++i;

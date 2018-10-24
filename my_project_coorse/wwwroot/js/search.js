@@ -95,15 +95,45 @@ $(".addToCart").on("click", function () { // this isn't nessesery event
         success: function (data) {
             console.log('vlid!');
             $('.alerts').append(`
-    <div class="alert alert-success" id="success-alert">
+    <div class="alert status-alert alert-success" id="success-alert">
     <button type="button" class="close" data-dismiss="alert">x</button>
     <strong>Success! </strong>
     Product have added to your wishlist.
 </div>
-`);
+            `);
+
+            if (data !== true) {
+                $('.alerts').append(`
+            <
+            div
+
+            class=
+            "alert status-alert alert-danger"
+            id = "success-alert" >  < button
+            type = "button"
+
+            class=
+            "close"
+            data - dismiss = "alert" > x < /
+            button >  < strong > Success
+            ! < /
+            strong >
+                Product
+            have
+            added
+            to
+            your
+            wishlist. < /
+            div > `);
+            }
+
+            $(".status-alert").fadeTo(2000, 500).slideUp(500,
+                function () {
+                    $(".status-alert").slideUp(500);
+                });
+
         },
         error: function () {
-            $('.goods-not-found').show();
             console.log('Some error occurred!');
         }
     });
@@ -140,3 +170,92 @@ $(document).ready(function () {
         });
     });
 });
+
+
+//Add To cart in table button
+$(".addToCart-table").on("click", function () { // this isn't nessesery event
+    console.log("I'm HERE! HELP ME PLEASE!");
+    var prodName = getProdNameFromTable(this);
+    var prodSupp = getProdSuppFromTable(this);
+    var prodSuppAddress = getProdSuppAddressFromTable(this);
+
+    var model = {
+        productName: prodName,
+        supplier: prodSupp,
+        addressSupplier: prodSuppAddress
+    };
+    console.log(model);
+
+    $.ajax({
+        type: 'POST',
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        url: "../api/ajax/addProduct", // replace 'PHP-FILE.php with your php file
+        data: JSON.stringify(model),
+        success: function (data) {
+            console.log('vlid!');
+            $('.alerts').append(`
+    <div class="alert status-alert alert-success" id="success-alert">
+    <button type="button" class="close" data-dismiss="alert">x</button>
+    <strong>Success! </strong>
+    Product have added to your wishlist.
+</div>
+            `);
+
+            if (data !== true) {
+                $('.alerts').append(`
+            <
+            div
+
+            class=
+            "alert status-alert alert-danger"
+            id = "success-alert" >  < button
+            type = "button"
+
+            class=
+            "close"
+            data - dismiss = "alert" > x < /
+            button >  < strong > Success
+            ! < /
+            strong >
+                Product
+            have
+            added
+            to
+            your
+            wishlist. < /
+            div > `);
+            }
+
+            $(".status-alert").fadeTo(2000, 500).slideUp(500,
+                function () {
+                    $(".status-alert").slideUp(500);
+                });
+
+        },
+        error: function () {
+            console.log('Some error occurred!');
+        }
+    });
+});
+
+function getProdNameFromTable(block) {
+    var cardData = $(block).closest('.card-data');
+    var card = $(cardData).find('.material-card')[0];
+    var b = $(card).find('.product-name')[0];
+    return b.textContent;
+}
+
+
+function getProdSuppFromTable(block) {
+    var row = $(block).parents('tr')[0];
+    var name =  $(row).find('.supplier-name')[0];
+    return name.innerHTML;
+}
+
+
+function getProdSuppAddressFromTable(block) {
+    var row = $(block).parents('tr')[0];
+    var address = $(row).find('.supplier-address')[0];
+    return address.title;
+}
