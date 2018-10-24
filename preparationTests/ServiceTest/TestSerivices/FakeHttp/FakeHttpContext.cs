@@ -46,6 +46,9 @@ namespace preparationTests.ServiceTest.TestSerivices.FakeHttp
             session.Setup(_ => _.Set(It.IsAny<string>(), It.IsAny<byte[]>()))
                 .Callback<string, byte[]>( (a,b) => products.Add(GetKeyStr(), new Good()));
 
+            session.Setup(_ => _.Remove(It.IsAny<string>()))
+                .Callback<string>((key) => products.Remove(key));
+
             var o = UTF8Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(new Good()));
             session.Setup(_ => _.TryGetValue(It.IsAny<string>(), out o))
                 .Returns(true);

@@ -102,7 +102,7 @@ namespace preparation.Services.Cart
             foreach (var cartKey in CartKeys())
             {
                 json = _context.Session.GetString(cartKey);
-                var jbj = JsonConvert.DeserializeObject<IProduct>(json);
+                var jbj = JsonConvert.DeserializeObject<Good>(json);
                 if (jbj.Equals(product))
                     _context.Session.Remove(cartKey);
             }
