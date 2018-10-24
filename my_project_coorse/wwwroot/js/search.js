@@ -29,11 +29,11 @@ $("#search-bar").keyup(function () { // this isn't nessesery event
                     AddTo($('#goods-append'), preparation);
                 });
             }
-},
-    error: function () {
-        $('.goods-not-found').show();
-        console.log('Some error occurred! search text = ' + searchText);
-    }
+        },
+        error: function () {
+            $('.goods-not-found').show();
+            console.log('Some error occurred! search text = ' + searchText);
+        }
     });
 });
 
@@ -75,8 +75,8 @@ function AddTo(block, elem) {
 //Add To cart
 $(".addToCart").on("click", function () { // this isn't nessesery event
     console.log("I'm HERE! HELP ME PLEASE!");
-    var  prodName = getProdName(this);
-    var  prodSupp = getProdSupp(this);
+    var prodName = getProdName(this);
+    var prodSupp = getProdSupp(this);
     var prodSuppAddress = getProdSuppAddress(this);
 
     var model = {
@@ -94,6 +94,13 @@ $(".addToCart").on("click", function () { // this isn't nessesery event
         data: JSON.stringify(model),
         success: function (data) {
             console.log('vlid!');
+            $('.alerts').append(`
+    <div class="alert alert-success" id="success-alert">
+    <button type="button" class="close" data-dismiss="alert">x</button>
+    <strong>Success! </strong>
+    Product have added to your wishlist.
+</div>
+`);
         },
         error: function () {
             $('.goods-not-found').show();
@@ -123,3 +130,13 @@ function getProdSuppAddress(block) {
     var b = founds[0];
     return b.title;
 }
+
+
+$(document).ready(function () {
+    $("#success-alert").hide();
+    $("#myWish").click(function showAlert() {
+        $("#success-alert").fadeTo(2000, 500).slideUp(500, function () {
+            $("#success-alert").slideUp(500);
+        });
+    });
+});

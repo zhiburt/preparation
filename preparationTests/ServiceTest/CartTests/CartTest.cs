@@ -71,7 +71,6 @@ namespace preparationTests.ServiceTest.CartTests
                 //Arrange
                 var map = new Dictionary<string, IProduct>();
 
-
                 IEnumerable<IProduct> collection = null;
 
                 var context = FakeHttpContext.NewFakeHttpContext();

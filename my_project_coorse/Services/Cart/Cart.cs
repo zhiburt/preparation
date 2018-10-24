@@ -4,24 +4,36 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using preparation.Models;
 
 namespace preparation.Services.Cart
 {
-    public class Cart
+    public class Cart : ICart
     {
-        private readonly HttpContext _context;
         int iteratorSesssonName;
+        private HttpContext _context;
 
         public Cart(HttpContext context)
         {
-            _context = context;
+            this._context = context;
+            FillIterator();
+        }
 
-            var keys = CartKeys();
-            foreach (var key in keys)
+        //[ActivatorUtilitiesConstructor]
+        public Cart()
+        {
+        }
+
+
+        public HttpContext Context
+        {
+            private get { return Context; }
+            set
             {
-                iteratorSesssonName++;
+                _context = value;
+                FillIterator();
             }
         }
 
@@ -44,14 +56,27 @@ namespace preparation.Services.Cart
             }
         }
 
-        public virtual IEnumerable<IProduct> All()
+        public virtual IEnumerable<IProduct> GetAll()
         {
             string json = "";
             foreach (var cartKey in CartKeys())
             {
                 json = _context.Session.GetString(cartKey);
-               yield return JsonConvert.DeserializeObject<Good>(json);
+                yield return JsonConvert.DeserializeObject<Good>(json);
             }
+        }
+
+        public virtual IEnumerable<IProduct> All()
+        {
+            string json = "";
+            var list = new List<IProduct>();
+            foreach (var cartKey in CartKeys())
+            {
+                json = _context.Session.GetString(cartKey);
+                list.Add(JsonConvert.DeserializeObject<Good>(json));
+            }
+
+            return list.AsEnumerable();
         }
 
         public virtual decimal TotalPrice()
@@ -98,7 +123,7 @@ namespace preparation.Services.Cart
             foreach (var key in _context.Session.Keys)
             {
                 var match = regex.IsMatch(key);
-                
+
                 if (match)
                 {
                     yield return key;
@@ -106,5 +131,15 @@ namespace preparation.Services.Cart
                 }
             }
         }
+
+        private void FillIterator()
+        {
+            var keys = CartKeys();
+            foreach (var key in keys)
+            {
+                iteratorSesssonName++;
+            }
+        }
+
     }
 }

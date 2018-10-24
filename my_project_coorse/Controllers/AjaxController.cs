@@ -41,7 +41,8 @@ namespace preparation.Controllers
             if (ModelState.IsValid)
             {
                 Cart cart = new Cart(HttpContext);
-                var prod = (await _streinger.Goods()).First(g => g.Product.Name == model.ProductName &&
+                var goods = await _streinger.Goods();
+                var prod = (goods).First(g => g.Product.Name == model.ProductName &&
                                                                  g.Supplier.Name == model.Supplier &&
                                                                  g.Supplier.Address == model.AddressSupplier);
                 cart.AddProduct(prod);

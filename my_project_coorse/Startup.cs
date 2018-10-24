@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -8,6 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using preparation.Models.Account;
 using preparation.Models.Contexts;
+using preparation.Services.Cart;
 using preparation.Services.ExternalDB;
 using preparation.Services.Messenger;
 using preparation.Services.Streinger;
@@ -78,6 +80,7 @@ namespace preparation
             services.AddSingleton<IExternalDb, ExternalDb>();
             services.AddSingleton<IStreinger, Streinger>();
             services.AddScoped<IMessenger, Messenger>();
+            services.AddScoped<ICart, Cart>((s) => new Cart());
 
             services.AddHttpClient();
 
