@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
@@ -99,12 +100,16 @@ namespace preparation.Services.Cart
         public virtual void Remove(IProduct product)
         {
             string json = "";
-            foreach (var cartKey in CartKeys())
+            var keys = CartKeys();
+            foreach (var cartKey in keys)
             {
                 json = _context.Session.GetString(cartKey);
                 var jbj = JsonConvert.DeserializeObject<Good>(json);
                 if (jbj.Equals(product))
+                {
                     _context.Session.Remove(cartKey);
+                    return;
+                }
             }
 
         }
@@ -116,9 +121,10 @@ namespace preparation.Services.Cart
 
         private IEnumerable<string> CartKeys()
         {
+            Mutex m = new Mutex();
             string pattern = @"^cart_list_\d+";
             Regex regex = new Regex(pattern);
-
+            m.WaitOne();
             //LinkedList<string> resp = new LinkedList<string>();
             foreach (var key in _context.Session.Keys)
             {
@@ -130,6 +136,7 @@ namespace preparation.Services.Cart
                     //resp.AddLast(new LinkedListNode<string>(key));
                 }
             }
+            m.ReleaseMutex();
         }
 
         private void FillIterator()

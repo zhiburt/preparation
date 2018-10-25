@@ -15,7 +15,7 @@
     },
     {
       "provider": "cdnjs",
-      "library": "popper.js@1.14.4",
+      "library": "popper.js@1.11.0",
       "destination": "wwwroot/lib/popper",
       "files": [
         "popper.min.js"
@@ -39,6 +39,11 @@
       "files": [
         "holder.min.js"
       ]
+    },
+    {
+      "provider": "cdnjs",
+      "library": "jquery-confirm@3.3.2",
+      "destination": "wwwroot/lib/jquery-confirm/"
     }
   ]
 }

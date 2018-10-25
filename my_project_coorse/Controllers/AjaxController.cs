@@ -54,15 +54,20 @@ namespace preparation.Controllers
 
         [HttpPost]
         [Route("removeProduct")]
-        public async Task<bool> DeleteProduct(string productName, string supplier, string addressSupplier)
+        public async Task<bool> DeleteProduct([FromBody]RemoveProductFromCartViewModel model)
         {
+            if (ModelState.IsValid)
+            {
+                Cart cart = new Cart(HttpContext);
+                var goods = await _streinger.Goods();
+                var prod = (goods).First(g => g.Product.Name == model.ProductName &&
+                                              g.Supplier.Name == model.Supplier &&
+                                              g.Supplier.Address == model.AddressSupplier);
+                cart.Remove(prod);
+                return true;
+            }
 
-            Cart cart = new Cart(HttpContext);
-            var prod = (await _streinger.Goods()).First(g => g.Product.Name == productName &&
-                                                             g.Supplier.Name == supplier &&
-                                                             g.Supplier.Address == addressSupplier);
-            cart.Remove(prod);
-            return true;
+            return false;
         }
     }
 }

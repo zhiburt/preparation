@@ -94,44 +94,7 @@ $(".addToCart").on("click", function () { // this isn't nessesery event
         data: JSON.stringify(model),
         success: function (data) {
             console.log('vlid!');
-            $('.alerts').append(`
-    <div class="alert status-alert alert-success" id="success-alert">
-    <button type="button" class="close" data-dismiss="alert">x</button>
-    <strong>Success! </strong>
-    Product have added to your wishlist.
-</div>
-            `);
-
-            if (data !== true) {
-                $('.alerts').append(`
-            <
-            div
-
-            class=
-            "alert status-alert alert-danger"
-            id = "success-alert" >  < button
-            type = "button"
-
-            class=
-            "close"
-            data - dismiss = "alert" > x < /
-            button >  < strong > Success
-            ! < /
-            strong >
-                Product
-            have
-            added
-            to
-            your
-            wishlist. < /
-            div > `);
-            }
-
-            $(".status-alert").fadeTo(2000, 500).slideUp(500,
-                function () {
-                    $(".status-alert").slideUp(500);
-                });
-
+            alert(data);
         },
         error: function () {
             console.log('Some error occurred!');
@@ -194,44 +157,7 @@ $(".addToCart-table").on("click", function () { // this isn't nessesery event
         data: JSON.stringify(model),
         success: function (data) {
             console.log('vlid!');
-            $('.alerts').append(`
-    <div class="alert status-alert alert-success" id="success-alert">
-    <button type="button" class="close" data-dismiss="alert">x</button>
-    <strong>Success! </strong>
-    Product have added to your wishlist.
-</div>
-            `);
-
-            if (data !== true) {
-                $('.alerts').append(`
-            <
-            div
-
-            class=
-            "alert status-alert alert-danger"
-            id = "success-alert" >  < button
-            type = "button"
-
-            class=
-            "close"
-            data - dismiss = "alert" > x < /
-            button >  < strong > Success
-            ! < /
-            strong >
-                Product
-            have
-            added
-            to
-            your
-            wishlist. < /
-            div > `);
-            }
-
-            $(".status-alert").fadeTo(2000, 500).slideUp(500,
-                function () {
-                    $(".status-alert").slideUp(500);
-                });
-
+            alert(data);
         },
         error: function () {
             console.log('Some error occurred!');
@@ -258,4 +184,47 @@ function getProdSuppAddressFromTable(block) {
     var row = $(block).parents('tr')[0];
     var address = $(row).find('.supplier-address')[0];
     return address.title;
+}
+
+
+function alert(state) {
+    if (state !== true) {
+        $('.alerts').append(`
+            <
+            div
+
+            class=
+            "alert status-alert alert-danger"
+            id = "success-alert" >  < button
+            type = "button"
+
+            class=
+            "close"
+            data - dismiss = "alert" > x < /
+            button >  < strong > Success
+            ! < /
+            strong >
+                Product
+            have
+            added
+            to
+            your
+            wishlist. < /
+            div > `);
+    } else {
+        $('.alerts').append(`
+    <div class="alert status-alert alert-success" id="success-alert">
+    <button type="button" class="close" data-dismiss="alert">x</button>
+    <strong>Success! </strong>
+    Product have added to your wishlist.
+</div>
+            `);
+    }
+
+    $(".alerts").fadeTo(8000, 500).slideUp(500,
+        function () {
+            $(".alerts").slideUp(500);
+            $(".status-alert").remove();
+        });
+
 }
