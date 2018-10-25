@@ -6,21 +6,28 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using preparation.Models;
 using preparation.Services.Streinger;
+using preparation.Services.TopAlgorithm;
 
 namespace preparation.Controllers
 {
     public class SearchController : Controller
     {
         private readonly IStreinger _streinger;
+        private readonly ITopAlgorithm _topAlgorithm;
 
-        public SearchController(IStreinger streinger)
+        public SearchController(IStreinger streinger, ITopAlgorithm topAlgorithm)
         {
             this._streinger = streinger;
+            _topAlgorithm = topAlgorithm;
         }
 
         public async Task<IActionResult> Index()
         {
-            return View(); // return best goods better
+            var goods = await _streinger.Goods();
+            var stackGoods = StackLogic(goods as IEnumerable<IProduct>);
+            var tops = _topAlgorithm.Top(stackGoods);
+
+            return View(tops); // return best goods better
         }
 
         //TODO better give IEnumerable<Stack<Good>>() for better View

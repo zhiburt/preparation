@@ -12,6 +12,7 @@ using preparation.Controllers;
 using preparation.Models;
 using preparation.Services.ExternalDB;
 using preparation.Services.Streinger;
+using preparation.Services.TopAlgorithm;
 using Xunit;
 using Xunit.Sdk;
 
@@ -33,9 +34,9 @@ namespace preparationTests.Controllers.SearchController
                 var mok = new Mock<IStreinger>();
                 mok.Setup(m => m.Goods())
                     .ReturnsAsync(goods);
-                var seachController = new preparation.Controllers.SearchController(mok.Object);
+                var seachController = new preparation.Controllers.SearchController(mok.Object, null);
 
-                IEnumerable <IEnumerable<IProduct>> expected = new[]
+                IEnumerable<IEnumerable<IProduct>> expected = new[]
                 {
                     new[]{goods[0]},
                     new[]{goods[1]},
@@ -61,7 +62,7 @@ namespace preparationTests.Controllers.SearchController
                 var mok = new Mock<IStreinger>();
                 mok.Setup(m => m.Goods())
                     .ReturnsAsync(goods);
-                var seachController = new preparation.Controllers.SearchController(mok.Object);
+                var seachController = new preparation.Controllers.SearchController(mok.Object, null);
 
                 //Actual
                 var resp = await seachController.Search("_not_found");
@@ -72,7 +73,7 @@ namespace preparationTests.Controllers.SearchController
                 Assert.Null(model);
             }
 
-            
+
             [Fact]
             public async Task SearchWhenInputIsEmptyStr()
             {
@@ -82,7 +83,7 @@ namespace preparationTests.Controllers.SearchController
                     .Returns(Task.FromResult(""));
                 var streinger = new Streinger(mok.Object);
 
-                var seachController = new preparation.Controllers.SearchController(streinger);
+                var seachController = new preparation.Controllers.SearchController(streinger, null);
                 string preparationName = "";
                 //Actual
                 var resp = await seachController.Search(preparationName);
@@ -90,6 +91,63 @@ namespace preparationTests.Controllers.SearchController
                 var viewResult = Assert.IsType<ViewResult>(resp);
                 Assert.Null(viewResult.ViewData.Model);
             }
+        }
+    }
+
+    public class Index
+    {
+        [Fact]
+        public async Task GetTopWhenDataIsnotEmpty()
+        {
+            //Arrange
+            var goods = new[]
+            {
+                new Good() { Price = 2.12m, Product = new Preparation(){Name = "_world_"}},
+                new Good() { Price = 12.2m, Product = new Preparation(){Name = "hello_world"}},
+            };
+            IEnumerable<IEnumerable<IProduct>> expected = new[]
+            {
+                new[]{goods[0]},
+                new[]{goods[1]},
+            };
+
+            var mok = new Mock<IStreinger>();
+            mok.Setup(m => m.Goods())
+                .ReturnsAsync(goods);
+            var algorighm = new Mock<TopAlgorithm>();
+            algorighm.Setup(a => a.Top(It.IsAny<IEnumerable<IEnumerable<IProduct>>>()))
+                .Returns(expected);
+
+            var seachController = new preparation.Controllers.SearchController(mok.Object, algorighm.Object);
+
+            //Actual
+            var resp = await seachController.Index();
+            //Assert
+            var viewResult = Assert.IsType<ViewResult>(resp);
+            IEnumerable<IEnumerable<IProduct>> model =
+                Assert.IsAssignableFrom<IEnumerable<IEnumerable<IProduct>>>(viewResult.ViewData.Model);
+            Assert.Equal(expected, model);
+        }
+
+        [Fact]
+        public async Task GetTopWhenDataIsEmpty()
+        {
+            //Arrange
+            IEnumerable<Good> goods = new Good[]{};
+            var mok = new Mock<IStreinger>();
+            mok.Setup(m => m.Goods())
+                .ReturnsAsync(goods);
+            var algorighm = new Mock<TopAlgorithm>();
+            algorighm.Setup(a => a.Top(It.IsAny<IEnumerable<IEnumerable<IProduct>>>()))
+                .Returns( (IEnumerable<IEnumerable<IProduct>>) null);
+
+            var seachController = new preparation.Controllers.SearchController(mok.Object, algorighm.Object);
+
+            //Actual
+            var resp = await seachController.Index();
+            //Assert
+            var viewResult = Assert.IsType<ViewResult>(resp);
+            Assert.Null(viewResult.ViewData.Model);
         }
     }
 }
