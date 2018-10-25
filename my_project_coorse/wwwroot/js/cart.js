@@ -84,3 +84,4 @@ function getProdSuppAddress(block) {
     let name = $(block).data("supplieraddress");
     return name;
 }
+

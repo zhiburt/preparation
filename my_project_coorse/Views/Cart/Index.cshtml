@@ -1,16 +1,19 @@
 ﻿@model preparation.ViewModels.Cart.CartViewModel
 
 @section css
-{
-    <link rel="stylesheet" href="lib/jquery-confirm/jquery-confirm.min.css"/>
+    {
+    <link rel="stylesheet" href="lib/jquery-confirm/jquery-confirm.min.css" />
+}
+
+@section navbar
+    {
+
 }
 
 <div class="row">
 
     @if (Model.Products != null)
     {
-
-
         <div class="col-md-4 order-last mb-4">
             <h4 class="d-flex justify-content-between align-items-center mb-3">
                 <span class="text-muted">Your cart</span>
@@ -59,9 +62,19 @@
                     </div>
                 </div>
             </form>
+            <div class="my-2">
+                <button class="btn btn-lg btn-block btn-outline-success"><i>DONE</i></button>
+            </div>
         </div>
+
         <div class="col-md-8 order-md-10 mb-4">
-            <div class="bg-info" style="padding: 10rem;"></div>
+            <div class="m-5 text-center">
+                <img class="m-5 img-fluid img-responsive" alt="" src="~/images/logo/logo_v2.svg">
+                <p class="lead">
+                    Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor. Duis mollis, est non commodo luctus.
+                </p>
+                <p><em><small>thank you</small></em></p>
+            </div>
         </div>
     }
     else
@@ -75,6 +88,11 @@
         </div>
     }
 </div>
+
+@section footer
+    {
+
+}
 
 @section js
     {
