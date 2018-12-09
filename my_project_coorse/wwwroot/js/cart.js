@@ -36,6 +36,40 @@ $(function () {
 });
 
 
+$(function () {
+    var products = $('.done-succseed');
+    $(products).each(function () {
+        var prod = this;
+        $(this).confirm({
+            theme: 'modern',
+            icon: 'fa fa-smile-o text-info',
+            title: 'Confirm!',
+            draggable: true,
+            dragWindowBorder: true,
+            content: 'Simple confirm!',
+            buttons: {
+                confirm: {
+                    text: 'DONE',
+                    btnClass: 'btn-success',
+                    keys: ['enter'],
+                    action: function () {
+
+                        $('.removeProduct').each(function () {
+                            removeProduct($(this));
+                        });
+
+                        $.alert('OK');
+                    }
+                },
+                cancel: function () {
+                    //$.alert('Canceled!');
+                }
+            }
+        });
+    });
+});
+
+
 function removeProduct(productButton) {
     var button = productButton[0];
     var cartRow = $(button).parents('li')[0];

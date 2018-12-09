@@ -24,7 +24,7 @@ namespace preparation.Models.Account
 
         public IQueryable<string> GetMessagesID()
         {
-            return this.Messages?.Split('~')?.AsQueryable();
+            return this.Messages?.Split('~')?.Skip(1).AsQueryable();
         }
 
         public void AddMessagesID(string id)

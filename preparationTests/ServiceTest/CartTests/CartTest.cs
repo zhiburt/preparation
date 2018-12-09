@@ -9,6 +9,7 @@ using preparation.Models;
 using preparation.Services.Cart;
 using preparationTests.ServiceTest.TestSerivices.FakeHttp;
 using Xunit;
+using NAssert = NUnit.Framework.Assert;
 
 namespace preparationTests.ServiceTest.CartTests
 {
@@ -18,7 +19,7 @@ namespace preparationTests.ServiceTest.CartTests
         public class AddProductToCart
         {
             [Fact]
-            public void AddProductWhenSessionIsNotClear()
+            public void AddProduct_WhenSessionIsNotClear_ResultAdd2ProductsToCart()
             {
                 //Arrange
                 var map = new Dictionary<string, IProduct>(new List<KeyValuePair<string, IProduct>>
@@ -45,7 +46,7 @@ namespace preparationTests.ServiceTest.CartTests
             }
 
             [Fact]
-            public void AddProductWhenSessionClear()
+            public void AddProduct_WhenSessionClear_ResultAdd2ProductsToCart()
             {
                 //Arrange
                 var map = new Dictionary<string, IProduct>();
@@ -67,7 +68,7 @@ namespace preparationTests.ServiceTest.CartTests
             }
 
             [Fact]
-            public void AddProductWhenDataIsNULL()
+            public void AddProduct_WhenDataIsNULL_ExpectedExeption()
             {
                 //Arrange
                 var map = new Dictionary<string, IProduct>();
@@ -83,7 +84,7 @@ namespace preparationTests.ServiceTest.CartTests
             }
 
             [Fact]
-            public void AddProductSingleWhenDataIsNULL()
+            public void AddProductSingle_WhenDataIsNULL_ExpectedExeption()
             {
                 //Arrange
                 var map = new Dictionary<string, IProduct>();
@@ -200,6 +201,67 @@ namespace preparationTests.ServiceTest.CartTests
                 //Assert
                 Assert.Equal(expected, actual);
             }
+        }
+    }
+
+    [NUnit.Framework.TestFixture]
+    public class RemoveProductFromCartNUnit
+    {
+        [NUnit.Framework.Test]
+        public void RemoveProductWhenObjectExistsIn()
+        {
+            //Arrange
+            var targetGood = new Good() { Price = 12.2m, Supplier = new Supplier() { Name = "Maxim" } };
+            var map = new Dictionary<string, IProduct>(new List<KeyValuePair<string, IProduct>>
+                {
+                    new KeyValuePair<string, IProduct>("cart_list_0", targetGood),
+                    new KeyValuePair<string, IProduct>("cart_list_1", new Good()),
+                });
+            var expected = map;
+            expected.Remove("cart_list_0");
+
+            var context = FakeHttpContext.NewFakeHttpContext();
+            context.SetupProperty(e => e.Session, FakeHttpContext.FakeSession(map).Object);
+            var cart = new Cart(context.Object);
+            //Actual
+            cart.Remove(targetGood);
+            //Assert
+            Assert.Equal(expected, map);
+        }
+
+        [NUnit.Framework.Test]
+        public void RemoveProductWhenObjectDoesnotExistsIn()
+        {
+            //Arrange
+            var targetGood = new Good() { Price = 12.2m, Supplier = new Supplier() { Name = "Maxim" } };
+            var map = new Dictionary<string, IProduct>(new List<KeyValuePair<string, IProduct>>
+                {
+                    new KeyValuePair<string, IProduct>("cart_list_1", new Good()),
+                });
+            var expected = map;
+
+            var context = FakeHttpContext.NewFakeHttpContext();
+            context.SetupProperty(e => e.Session, FakeHttpContext.FakeSession(map).Object);
+            var cart = new Cart(context.Object);
+            //Actual
+            cart.Remove(targetGood);
+            //Assert
+            NAssert.AreEqual(expected, map);
+        }
+
+        [Fact]
+        public void RemoveWhenProductIsNull()
+        {
+            //Arrange
+            var map = new Dictionary<string, IProduct>(new List<KeyValuePair<string, IProduct>> { });
+
+            var context = FakeHttpContext.NewFakeHttpContext();
+            context.SetupProperty(e => e.Session, FakeHttpContext.FakeSession(map).Object);
+            var cart = new Cart(context.Object);
+            //Actual
+            cart.Remove(null);
+            //Assert
+            NAssert.AreEqual(map, map);
         }
     }
 }

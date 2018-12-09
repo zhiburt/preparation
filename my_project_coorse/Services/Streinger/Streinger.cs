@@ -28,7 +28,7 @@ namespace preparation.Services.Streinger
             _externalDb = externalDb;
         }
 
-        public async Task<Supplier> Suppliers(string suppName, string suppAddress)
+        public virtual async Task<Supplier> Suppliers(string suppName, string suppAddress)
         {
             var strJson = await _externalDb.AskService($"suppliers/find/byAddressAndName", null, new[]
             {
@@ -40,7 +40,7 @@ namespace preparation.Services.Streinger
         }
 
         //TODO TESTS NOT FOUND
-        public async Task<IQueryable<Supplier>> Suppliers()
+        public virtual async Task<IQueryable<Supplier>> Suppliers()
         {
             var strJson = await _externalDb.AskService($"suppliers");
 
@@ -49,7 +49,7 @@ namespace preparation.Services.Streinger
             return supplier.AsQueryable();
         }
 
-        public async Task<Supplier> Suppliers(int supplierId)
+        public virtual async Task<Supplier> Suppliers(int supplierId)
         {
             var strJson = await _externalDb.AskService($"suppliers/find/byId", HttpMethod.Get, new[]
             {
@@ -92,7 +92,7 @@ namespace preparation.Services.Streinger
             return !CheckErrorInJSON(strJson);
         }
 
-        public async Task<Preparation> Preparations(string prepName)
+        public virtual async Task<Preparation> Preparations(string prepName)
         {
             var strJson = await _externalDb.AskService($"preparations/find/byName", HttpMethod.Get, new[]
             {
@@ -129,7 +129,7 @@ namespace preparation.Services.Streinger
             return preparations;
         }
 
-        public async Task<IEnumerable<Good>> Goods(string prepName)
+        public virtual async Task<IEnumerable<Good>> Goods(string prepName)
         {
             var prep = await Preparations(prepName);
             if (prep == null)

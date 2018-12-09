@@ -5,6 +5,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using Moq;
+using Newtonsoft.Json;
 using preparation.Models;
 using preparation.Services.ExternalDB;
 using preparation.Services.Streinger;
@@ -29,24 +30,34 @@ namespace preparationTests.ServiceTest.StreingerTests
                 //Actual
                 var all = await streinger.Preparations();
                 //Assert
-                Assert.NotNull(all);
+                Assert.Null(all);
             }
 
             [Fact]
             public async Task GetPreparationsByName()
             {
                 //Arrange
+                var expected = new Preparation(){Name = "Hello world", ActiveIngredient = "Limon"};
+                var result = JsonConvert.SerializeObject(new Dictionary<string, IGood>()
+                {
+                    {"data", expected}
+                });
+
                 var mok = new Mock<IExternalDb>();
-                mok.Setup(e => e.AskService(It.IsAny<string>(), HttpMethod.Get, null))
-                    .Returns(Task.FromResult(@""));
+                (string, string) p = ("name", "");
+                mok.Setup(e => e.AskService(It.IsAny<string>(), HttpMethod.Get, new[]
+                    {
+                        p
+                    })).
+                    Returns(Task.FromResult(result));
+
                 var streinger = new Streinger(mok.Object);
 
-                string namePrep = "Длянос";
                 //Actual
-                var preparation = await streinger.Preparations(namePrep);
+                var preparation = await streinger.Preparations("");
                 //Assert
                 Assert.NotNull(preparation);
-                Assert.Equal("Ксилометазолин", preparation.ActiveIngredient);
+                Assert.Equal(expected, preparation);
             }
 
             [Fact]
