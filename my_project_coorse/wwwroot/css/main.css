@@ -29,3 +29,17 @@
 
 .small-content {
 }
+
+
+.dropdown-menu.scrollable {
+    height: auto;
+    max-height: 30em;
+    overflow-x: hidden;
+}
+
+.list-group.scrollable {
+    max-height: 10rem;
+    min-height: 5rem;
+    overflow: scroll;
+    -webkit-overflow-scrolling: touch;
+}

@@ -10,7 +10,7 @@
 }
 
 
-<div class="search-box bg-white">
+<div class="search-box bg-white shadow-lg">
     <form class="search form-inline" asp-action="Search" method="get">
         <input name="searchName" class="form-control form-co col col-12" id="" type="text" placeholder="Search">
     </form>
@@ -49,9 +49,9 @@
                     <div class="col-md-4 col-sm-6 good">
                         <div class="card-data">
 
-                            <article class="material-card Indigo">
+                            <article class="material-card Blue-Grey">
                                 <h2>
-                                    <span class="product-name">@good.Product.Name</span>
+                                    <a class="product-name text-white" asp-controller="Product" asp-action="Product" asp-route-productName="@good.Product.Name" >@good.Product.Name</a>
                                     <strong class="supplier-name">
                                         <i class="fa fa-fw fa-star"></i>@good.Supplier.Name
                                     </strong>
@@ -84,7 +84,7 @@
                                 <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
                                     <div class="modal-content">
                                         <div class="modal-header">
-                                            <h5 class="modal-title" id="exampleModalCenterTitle">Modal title</h5>
+                                            <h5 class="modal-title" id="exampleModalCenterTitle">awful Market</h5>
                                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                 <span aria-hidden="true">&times;</span>
                                             </button>
@@ -124,7 +124,7 @@
                                         </div>
                                         <div class="modal-footer">
                                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                            <button type="button" class="btn btn-primary">Save changes</button>
+                                            <button type="button" class="btn btn-primary">O</button>
                                         </div>
                                     </div>
                                 </div>

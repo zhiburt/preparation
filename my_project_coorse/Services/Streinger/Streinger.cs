@@ -156,8 +156,8 @@ namespace preparation.Services.Streinger
 
 
         public async Task<bool> AddGood(Good good)
-        {
-            if (good == null || (good.Supplier == null || good.Product == null)) throw new ArgumentNullException(nameof(good));
+            {
+                if (good == null || (good.Supplier == null || good.Product == null)) throw new ArgumentNullException(nameof(good));
 
             var prep = await Preparations(good.Product.Name);
             var supp = await Suppliers(good.Supplier.Name, good.Supplier.Address);

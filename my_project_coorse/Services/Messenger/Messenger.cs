@@ -53,5 +53,27 @@ namespace preparation.Services.Messenger
         {
             throw new NotImplementedException();
         }
+
+        public async Task SendV2<T>(T message, User to, User from) where T : class
+        {
+            var json = JsonConvert.SerializeObject(message);
+
+            var user = await _userManager.FindByIdAsync(from.Id);
+            if (user != null)
+            {
+                //    var newMessage = await _messengerContext.AddAsync(new Message()
+                //    {
+                //        From = from.Id,
+                //        Level = MessageLevel.Normal,
+                //        Test = json
+                //    });
+                user.AddMessagesID("11123");
+
+                await _messengerContext.SaveChangesAsync();
+                await _userManager.UpdateAsync(user);
+
+            }
+        }
+
     }
 }

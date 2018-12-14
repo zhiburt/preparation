@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using Newtonsoft.Json;
+using NUnit.Framework;
 using preparation;
 using preparation.Controllers;
 using preparation.Models;
@@ -15,11 +16,153 @@ using preparation.Services.Streinger;
 using preparation.Services.TopAlgorithm;
 using Xunit;
 using Xunit.Sdk;
+using NUnitAssert = NUnit.Framework.Assert;
+using Assert = Xunit.Assert;
 
 namespace preparationTests.Controllers.SearchController
 {
     public class SearchControllerTests
     {
+        [TestFixture]
+        public class Integration
+        {
+            [TestFixture]
+
+            public class Index
+            {
+                private IStreinger strngr;
+
+                [SetUp]
+                public void SetUp()
+                {
+                    var goods = new Good[]
+                    {
+                        new Good()
+                        {
+                            Product = new Preparation(){Name = "hello_world"},
+                            Supplier = new Supplier(){Company = "company"}
+                        }
+                    }.AsEnumerable();
+
+                    var strngr = new Mock<IStreinger>();
+                    strngr.Setup(ex => ex.Goods()).Returns(Task.FromResult(goods));
+                    strngr.Setup(ex => ex.Goods(It.IsAny<string>())).Returns(Task.FromResult(goods));
+                    strngr.Setup(ex => ex.Goods("NOT_EXISTS")).Returns(Task<IEnumerable<Good>>.FromResult((IEnumerable<Good>)null));
+
+                    this.strngr = strngr.Object;
+                }
+
+                [Test]
+                public async Task WhenStreingerReturnNULLResultExeption()
+                {
+                    var strngr = new Mock<IStreinger>();
+                    strngr.Setup(ex => ex.Goods()).Returns(Task.FromResult((IEnumerable<Good>)null));
+
+                    var algo = new TopAlgorithm();
+                    var search = new preparation.Controllers.SearchController(streinger: strngr.Object, topAlgorithm: algo);
+
+                    NUnitAssert.CatchAsync(async () => await search.Index());
+                }
+
+                [Test]
+                public async Task WhenStreingerReturnOKDataResultOKModel()
+                {
+                    var algo = new TopAlgorithm();
+                    var search = new preparation.Controllers.SearchController(streinger: strngr, topAlgorithm: algo);
+
+                    var resp = await search.Index();
+
+                    NUnitAssert.IsAssignableFrom(typeof(ViewResult), resp);
+                    NUnitAssert.NotNull(resp);
+
+                    var model = (resp as ViewResult).ViewData.Model;
+                    NUnitAssert.NotNull(model);
+                    NUnitAssert.IsAssignableFrom<IEnumerable<IProduct>[]>(model);
+                }
+
+                //TODO THIS IS BUG
+                [Test]
+                public async Task WhenCompanyNameOrProductNameNullResultExeption()
+                {
+                    var goods = new Good[]
+                    {
+                        new Good()
+                        {
+                            Product = new Preparation(){},
+                            Supplier = new Supplier(){}
+                        }
+                    }.AsEnumerable();
+
+                    var strngr = new Mock<IStreinger>();
+                    strngr.Setup(ex => ex.Goods()).Returns(Task.FromResult(goods));
+
+                    var algo = new TopAlgorithm();
+                    var search = new preparation.Controllers.SearchController(streinger: strngr.Object, topAlgorithm: algo);
+
+                    NUnitAssert.CatchAsync<ArgumentNullException>(async () => await search.Index());
+                }
+            }
+
+            public class StackLogic
+            {
+                [Test]
+                public async Task WhenParamValidResultOKAsync()
+                {
+                    var goods = new Good[]
+                    {
+                        new Good()
+                        {
+                            Product = new Preparation(){Name = "2"},
+                            Supplier = new Supplier(){}
+                        },
+                        new Good()
+                        {
+                            Product = new Preparation(){Name = "1"},
+                            Supplier = new Supplier(){}
+                        }
+                    }.AsEnumerable();
+
+                    var strngr = new Mock<IStreinger>();
+                    strngr.Setup(ex => ex.Goods()).Returns(Task.FromResult(goods));
+                    var algo = new Mock<ITopAlgorithm>();
+                    var search = new preparation.Controllers.SearchController(streinger: strngr.Object, topAlgorithm: algo.Object);
+
+                    var actual = search.StackLogic(await strngr.Object.Goods() as IEnumerable<IProduct>);
+                    NUnitAssert.IsNotNull(actual);
+                    NUnitAssert.AreEqual(2, actual.Count());
+
+                    goods = new Good[]
+                    {
+                        new Good()
+                        {
+                            Product = new Preparation(){Name = "1"},
+                            Supplier = new Supplier(){}
+                        },
+                        new Good()
+                        {
+                            Product = new Preparation(){Name = "1"},
+                            Supplier = new Supplier(){}
+                        }
+                    }.AsEnumerable();
+
+                    actual = search.StackLogic(goods as IEnumerable<IProduct>);
+                    NUnitAssert.IsNotNull(actual);
+                    NUnitAssert.AreEqual(1, actual.Count());
+                }
+
+                [Test]
+                public static async Task WhenParamIsNullResultExeptionAsync()
+                {
+                    var strngr = new Mock<IStreinger>();
+                    strngr.Setup(ex => ex.Goods()).Returns(Task.FromResult((IEnumerable<Good>)null));
+                    var algo = new Mock<ITopAlgorithm>();
+                    var search = new preparation.Controllers.SearchController(streinger: strngr.Object, topAlgorithm: algo.Object);
+
+                    NUnitAssert.CatchAsync(async () => search.StackLogic(await strngr.Object.Goods() as IEnumerable<IProduct>));
+                }
+            }
+        }
+
         public class Search
         {
             [Fact]

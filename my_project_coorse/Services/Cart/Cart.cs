@@ -44,6 +44,7 @@ namespace preparation.Services.Cart
 
             var prodSerializeObject = JsonConvert.SerializeObject(product);
             _context.Session.SetString($"cart_list_{iteratorSesssonName}", prodSerializeObject);
+            _context.Session.CommitAsync().Wait();
             iteratorSesssonName++;
         }
 
@@ -108,6 +109,7 @@ namespace preparation.Services.Cart
                 if (jbj.Equals(product))
                 {
                     _context.Session.Remove(cartKey);
+                    _context.Session.CommitAsync().Wait();
                     return;
                 }
             }

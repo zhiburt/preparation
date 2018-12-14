@@ -1,0 +1,159 @@
+﻿@using Microsoft.CodeAnalysis.CSharp.Syntax
+
+@model preparation.ViewModels.Product.ProductViewModel
+@{
+    ViewData["Tittle"] = "Product";
+}
+
+@section css{
+
+}
+
+@if (Model == null)
+{
+
+}
+else
+{
+<div class="row">
+    <div class="col col-12 col-md-3">
+        <div class="img-container">
+            <a class="">
+                <img class="img-fluid img-responsive" style="width: 100%" src="@Model.Product.Product.ImageURL">
+            </a>
+        </div>
+        <h3 class="text-center"><small>price</small>@Model.Product.Price.ToString("N2")$</h3>
+    </div>
+
+    <div class="col col-md-9 col-12 pb-1 shadow-sm">
+        <h3>some information</h3>
+        <hr />
+        <div class="">
+            <div class="product-information">
+                <table class="table table-borderless">
+                    <thead>
+                        <tr>
+                            <th scope="col"></th>
+                            <th scope="col"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th scope="row">description</th>
+                            <td>
+                                <p>@Model.Product.Product.Description</p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">type</th>
+                            <td>@Model.Product.Product.Type</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <br />
+
+    <div class="col col-12 mt-4 mb-4 pt-2 pb-2 shadow">
+        <h4>some comments</h4>
+        <div class="bg-light">
+            <ul class="list-group list-group-flush scrollable">
+                @foreach (var comment in Model.Comments)
+                {
+                    <li class="list-group-item">@comment</li>
+                }
+            </ul>
+        </div>
+    </div>
+
+    @if (Model.Recommendations != null)
+    {
+        <div class="col col-12 mt-4 mb-4 pt-2 pb-2 shadow">
+            <h4>some recommends</h4>
+            <div class="">
+                <div class="row">
+                    @{ int i = -1;}
+                    @foreach (var recommend in Model.Recommendations)
+                    {
+                        i++;
+                        if (i == 4) { break; }
+
+                        <div class="col col-3 p-1">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h4 class="card-title">@recommend.Product.Name</h4>
+                                    <h6 class="card-subtitle mb-2 text-muted">@recommend.Price.ToString("N2")$</h6>
+                                    <p class="card-text">@recommend.Supplier.Name</p>
+                                    <a class="" href="#">smth</a>
+                                    <a class="card-link" href="#">buy</a>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+
+                <div class="mt-3 mb-2">
+                    <ul class="pagination mx-auto justify-content-center">
+                        <li class="page-item disabled">
+                            <a class="page-link" href="#">&laquo;</a>
+                        </li>
+                        <li class="page-item active">
+                            <a class="page-link" href="#">1</a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="#">2</a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="#">3</a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="#">4</a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="#">5</a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="#">&raquo;</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    }
+
+    @if (Model.Products != null && Model.Products.Count() > 1)
+    {
+        <div class="col col-12 mt-4 mb-4">
+            <h4>more <small>products</small> like that</h4>
+                <div class="row">
+                    <table class="table table-sm table-warning table-bordered">
+                        <thead>
+                        <tr>
+                        <th scope="col">Company</th>
+                            <th scope="col">Price</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var product in Model.Products)
+                            {
+                                <tr>
+                                    <th scope="row">@product.Supplier.Name</th>
+                                    <td>@product.Price</td>
+                                </tr>
+                            }
+
+                        </tbody>
+                    </table>
+                </div>
+        </div>
+    }
+</div>
+}
+
+
+@section footer
+    {
+    @{await Html.RenderPartialAsync("_SmallFooter");}
+}

@@ -56,7 +56,7 @@ namespace preparation.Controllers
             var dict = new SortedDictionary<string, Stack<IProduct>>();
             foreach (var product in products)
             {
-                if (!dict.ContainsKey(product.Product.Name))
+                if (!dict.ContainsKey(product.Product.Name)) // here
                 {
                     dict.Add(product.Product.Name, new Stack<IProduct>());
                 }

@@ -12,6 +12,7 @@ using preparation.Models.Contexts;
 using preparation.Services.Cart;
 using preparation.Services.ExternalDB;
 using preparation.Services.Messenger;
+using preparation.Services.Recommender;
 using preparation.Services.Streinger;
 using preparation.Services.TopAlgorithm;
 
@@ -81,6 +82,7 @@ namespace preparation
             services.AddSingleton<IExternalDb, ExternalDb>();
             services.AddSingleton<IStreinger, Streinger>();
             services.AddSingleton<ITopAlgorithm, TopAlgorithm>();
+            services.AddSingleton<IRecommender, Recommender>();
             services.AddScoped<IMessenger, Messenger>();
             services.AddScoped<ICart, Cart>((s) => new Cart());
 
