@@ -1,0 +1,78 @@
+﻿@using preparation.ViewModels.Supplier
+@using preparation.Models
+@using preparation.Controllers
+@using System.Collections.Generic
+@using Microsoft.AspNetCore.Mvc.ModelBinding
+@model ChangeProductViewModel
+
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Change Product";
+}
+
+    <div class="d-flex align-items-center p-3 my-3 text-white-50 bg-purple rounded shadow-sm">
+        <img width="48" height="48" class="mr-3" alt="" src="~/images/home/307609.svg">
+        <div class="text-secondary">
+            <h6 class="mb-0 ">Health</h6>
+            <small>Since 2011</small>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col col-md-8">
+            <div>
+                @await Html.PartialAsync("_Companys", null, ViewData)
+            </div>
+
+            <div class="shadow-sm">
+                @await Html.PartialAsync("AllGoodsTable", ViewData["userGoods"])
+            </div>
+        </div>
+        <div class="col col-4 col-md-4">
+            <div class="my-3 p-3 bg-white rounded shadow-sm">
+                <div class="container">
+                    <div class="row">
+                        <div class="col col-12 col-md-12 order-md-1">
+                            <form method="post" asp-action="СhangeProduct" asp-route-products="@ViewData["userGoods"]">
+                                <div asp-validation-summary="ModelOnly"></div>
+                                <div class="row">
+                                    <div class="col col-6 col-md-6 mb-3">
+                                        <label asp-for="NewPrice"></label>
+                                        <input class="form-control" asp-for="NewPrice">
+                                        <span asp-validation-for="NewPrice"></span>
+                                    </div>
+                                    <div class="col col-6 col-md-6 mb-3 visible">
+                                        <label asp-for="IndexChanges"></label>
+                                        <input class="form-control" asp-for="IndexChanges">
+                                        <span asp-validation-for="IndexChanges"></span>
+                                    </div>
+                                    <div class="col col-6 col-md-6 mb-3  invisible">
+                                        <label asp-for="Products"></label>
+                                        <input class="form-control" asp-for="Products" value="@ViewData["userGoods"]">
+                                        <span asp-validation-for="Products"></span>
+                                    </div>
+                                </div>
+                                <hr class="mb-4">
+                                <button class="btn btn-primary btn-lg btn-block" type="submit">Continue to checkout</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <footer class="my-5 pt-5 text-muted text-center text-small">
+        <p class="mb-1">© 2017-2018 Company Name</p>
+        <ul class="list-inline">
+            <li class="list-inline-item"><a href="#">Privacy</a></li>
+            <li class="list-inline-item"><a href="#">Terms</a></li>
+            <li class="list-inline-item"><a href="#">Support</a></li>
+        </ul>
+    </footer>
+
+    @section footer
+        {
+
+    }

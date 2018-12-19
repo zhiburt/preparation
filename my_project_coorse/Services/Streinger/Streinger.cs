@@ -252,6 +252,21 @@ namespace preparation.Services.Streinger
             return goods;
         }
 
+        public async Task<bool> AddPreparationAsync(Preparation preparation)
+        {
+            var strJson = await _externalDb.AskService(
+                    $"preparations/new", HttpMethod.Put, new[]
+                    {
+                        ("name", preparation.Name),
+                        ("description", preparation.Description),
+                        ("type", preparation.Type),
+                        ("activeIngredient", preparation.ActiveIngredient),
+                        ("imageURL", preparation.ImageURL),
+                    });
+
+            return !CheckErrorInJSON(strJson);
+        }
+
         private class GoodsServiceResp
         {
             public int PreparationId { get; set; }

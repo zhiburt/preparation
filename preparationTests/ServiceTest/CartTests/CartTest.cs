@@ -14,89 +14,89 @@ using NAssert = NUnit.Framework.Assert;
 namespace preparationTests.ServiceTest.CartTests
 {
     //TODO add strategy NAME_SESSION_OBJS in cart
-    public class CartTest
-    {
-        public class AddProductToCart
+        public class CartTest
         {
-            [Fact]
-            public void AddProduct_WhenSessionIsNotClear_ResultAdd2ProductsToCart()
+            public class AddProductToCart
             {
-                //Arrange
-                var map = new Dictionary<string, IProduct>(new List<KeyValuePair<string, IProduct>>
+                [Fact]
+                public void AddProduct_WhenSessionIsNotClear_ResultAdd2ProductsToCart()
                 {
-                    new KeyValuePair<string, IProduct>("cart_list_0", new Good()),
-                    new KeyValuePair<string, IProduct>("cart_list_1", new Good()),
-                    new KeyValuePair<string, IProduct>("cart_list_2", new Good()),
-                });
+                    //Arrange
+                    var map = new Dictionary<string, IProduct>(new List<KeyValuePair<string, IProduct>>
+                    {
+                        new KeyValuePair<string, IProduct>("cart_list_0", new Good()),
+                        new KeyValuePair<string, IProduct>("cart_list_1", new Good()),
+                        new KeyValuePair<string, IProduct>("cart_list_2", new Good()),
+                    });
 
 
-                ICollection<IProduct> collection = new List<IProduct>((IEnumerable<IProduct>)new[]
+                    ICollection<IProduct> collection = new List<IProduct>((IEnumerable<IProduct>)new[]
+                    {
+                        new Good(),
+                        new Good()
+                    });
+
+                    var context = FakeHttpContext.NewFakeHttpContext();
+                    context.SetupProperty(e => e.Session, FakeHttpContext.FakeSession(map).Object);
+                    var cart = new Cart(context.Object);
+                    //Actual
+                    cart.AddProduct(collection.ToArray());
+                    //Assert
+                    Assert.Equal(map.Count, cart.AmountProducts());
+                }
+
+                [Fact]
+                public void AddProduct_WhenSessionClear_ResultAdd2ProductsToCart()
                 {
-                    new Good(),
-                    new Good()
-                });
-
-                var context = FakeHttpContext.NewFakeHttpContext();
-                context.SetupProperty(e => e.Session, FakeHttpContext.FakeSession(map).Object);
-                var cart = new Cart(context.Object);
-                //Actual
-                cart.AddProduct(collection.ToArray());
-                //Assert
-                Assert.Equal(map.Count, cart.AmountProducts());
-            }
-
-            [Fact]
-            public void AddProduct_WhenSessionClear_ResultAdd2ProductsToCart()
-            {
-                //Arrange
-                var map = new Dictionary<string, IProduct>();
+                    //Arrange
+                    var map = new Dictionary<string, IProduct>();
 
 
-                ICollection<IProduct> collection = new List<IProduct>((IEnumerable<IProduct>)new[]
+                    ICollection<IProduct> collection = new List<IProduct>((IEnumerable<IProduct>)new[]
+                    {
+                        new Good(),
+                        new Good()
+                    });
+
+                    var context = FakeHttpContext.NewFakeHttpContext();
+                    context.SetupProperty(e => e.Session, FakeHttpContext.FakeSession(map).Object);
+                    var cart = new Cart(context.Object);
+                    //Actual
+                    cart.AddProduct(collection.ToArray());
+                    //Assert
+                    Assert.Equal(map.Count, cart.AmountProducts());
+                }
+
+                [Fact]
+                public void AddProduct_WhenDataIsNULL_ExpectedExeption()
                 {
-                    new Good(),
-                    new Good()
-                });
+                    //Arrange
+                    var map = new Dictionary<string, IProduct>();
 
-                var context = FakeHttpContext.NewFakeHttpContext();
-                context.SetupProperty(e => e.Session, FakeHttpContext.FakeSession(map).Object);
-                var cart = new Cart(context.Object);
-                //Actual
-                cart.AddProduct(collection.ToArray());
-                //Assert
-                Assert.Equal(map.Count, cart.AmountProducts());
+                    IEnumerable<IProduct> collection = null;
+
+                    var context = FakeHttpContext.NewFakeHttpContext();
+                    context.SetupProperty(e => e.Session, FakeHttpContext.FakeSession(map).Object);
+                    var cart = new Cart(context.Object);
+                    //Assert
+
+                    Assert.Throws<ArgumentNullException>(() => cart.AddProduct((IProduct[])collection));
+                }
+
+                [Fact]
+                public void AddProductSingle_WhenDataIsNULL_ExpectedExeption()
+                {
+                    //Arrange
+                    var map = new Dictionary<string, IProduct>();
+                    var context = FakeHttpContext.NewFakeHttpContext();
+                    context.SetupProperty(e => e.Session, FakeHttpContext.FakeSession(map).Object);
+
+                    var cart = new Cart(context.Object);
+
+                    //Assert
+                    Assert.Throws<ArgumentNullException>(() => cart.AddProduct((IProduct)null));
+                }
             }
-
-            [Fact]
-            public void AddProduct_WhenDataIsNULL_ExpectedExeption()
-            {
-                //Arrange
-                var map = new Dictionary<string, IProduct>();
-
-                IEnumerable<IProduct> collection = null;
-
-                var context = FakeHttpContext.NewFakeHttpContext();
-                context.SetupProperty(e => e.Session, FakeHttpContext.FakeSession(map).Object);
-                var cart = new Cart(context.Object);
-                //Assert
-
-                Assert.Throws<ArgumentNullException>(() => cart.AddProduct((IProduct[])collection));
-            }
-
-            [Fact]
-            public void AddProductSingle_WhenDataIsNULL_ExpectedExeption()
-            {
-                //Arrange
-                var map = new Dictionary<string, IProduct>();
-                var context = FakeHttpContext.NewFakeHttpContext();
-                context.SetupProperty(e => e.Session, FakeHttpContext.FakeSession(map).Object);
-
-                var cart = new Cart(context.Object);
-
-                //Assert
-                Assert.Throws<ArgumentNullException>(() => cart.AddProduct((IProduct)null));
-            }
-        }
 
         public class RemoveProductFromCart
         {

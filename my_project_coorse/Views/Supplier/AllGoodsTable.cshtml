@@ -1,0 +1,40 @@
+﻿@model IEnumerable<preparation.Models.Good>
+
+
+@if (Model == null)
+{
+    <h1>Model is NULL</h1>
+}
+else
+{
+    <table class="table table-sm">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Company</th>
+                <th scope="col">Name</th>
+                <th scope="col">Price</th>
+                <th scope="col">Delete</th>
+            </tr>
+        </thead>
+        <tbody>
+        @{int i = 0;}
+        @foreach (var good in Model)
+        {
+            <tr class="tooltip-ref" data-toggle="tooltip" data-placement="top" title="@(
+    good.Product.Description == "" ? "Description is empty" : good.Product.Description)">
+                <th scope="row">@(i++)</th>
+                <td>@good.Supplier.Name</td>
+                <td>@good.Product.Name</td>
+                <td>@good.Price.ToString("C2")</td>
+                <td>@await Html.PartialAsync("_DeleteButton", i)</td>   
+            </tr>
+
+        }
+        </tbody>
+    </table>
+}
+
+@section js{
+    <script src="js/table.js"></script>
+}

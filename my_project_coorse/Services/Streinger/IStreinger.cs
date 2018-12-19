@@ -19,5 +19,6 @@ namespace preparation.Services.Streinger
         Task<IQueryable<Supplier>> Suppliers();
         Task<Supplier> Suppliers(int supplierId);
         Task<Supplier> Suppliers(string suppName, string suppAddress);
+        Task<bool> AddPreparationAsync(Preparation preparation);
     }
 }
